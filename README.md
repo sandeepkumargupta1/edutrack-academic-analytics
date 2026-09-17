@@ -3,7 +3,7 @@
 > **VITyarthi Flipped Course Evaluated Project Submission**  
 > **Course**: Object Oriented Programming using Java (CSE1007 / CSE2001) / Software Engineering  
 > **Platform**: Command-Line Interface (CLI) Pure Java SE System  
-> **Repository Root URL**: `https://github.com/{github-username}/{repo-name}`
+> **Repository Root URL**: `https://github.com/sandeepkumargupta1/edutrack-academic-analytics`
 
 ---
 
@@ -53,8 +53,8 @@ Using a multi-factor risk assessment algorithm, EduTrack computes failure probab
 
 ### 4.1 Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
+git clone https://github.com/sandeepkumargupta1/edutrack-academic-analytics.git
+cd edutrack-academic-analytics
 ```
 
 ### 4.2 Compile the Code
@@ -271,4 +271,4 @@ CONTINUOUS ASSESSMENT GRADE HISTOGRAM
 - **Course Relevance**: Directly implements concepts from **Object Oriented Programming using Java (CSE1007)** (Inheritance, Polymorphism, Encapsulation, Abstraction, Strategy Pattern, Custom Exceptions, Collections, Streams, File I/O).
 - **Executable via Terminal**: Submissions requiring GUI setups are penalized. EduTrack is 100% executable from any terminal without GUI components.
 - **Repository Visibility**: Repository must be set to **Public** before portal submission.
-- **Submission URL Format**: Strict root URL: `https://github.com/{github-username}/{repo-name}` (Never submit a `/tree/main/` URL).
+- **Submission URL Format**: Strict root URL: `https://github.com/sandeepkumargupta1/edutrack-academic-analytics` (Never submit a `/tree/main/` URL).
