@@ -11,8 +11,10 @@
 - **Course**: Object Oriented Programming using Java (CSE1007) / Software Engineering (CSE2001)
 - **Student Name**: SANDEEP KUMAR GUPTA
 - **Registration Number**: 25BAI10622
+- **Branch / Program**: B.Tech Computer Science and Engineering in AIML
 - **Faculty Guide**: [Faculty Guide Name]
 - **Date**: Fall Semester 2026
+
 
 
 

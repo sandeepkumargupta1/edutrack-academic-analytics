@@ -3,6 +3,7 @@
 > **VITyarthi Flipped Course Evaluated Project Submission**  
 > **Student Name**: SANDEEP KUMAR GUPTA  
 > **Registration Number**: 25BAI10622  
+> **Branch / Program**: B.Tech Computer Science and Engineering in AIML  
 > **Course Title**: Object Oriented Programming using Java / Software Engineering  
 > **Course Code**: CSE1007 / CSE2001  
 > **Execution Mode**: 100% Pure Java SE Command-Line Interface (CLI)  

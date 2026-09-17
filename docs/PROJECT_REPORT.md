@@ -23,8 +23,9 @@ COURSE DETAILS:
 SUBMITTED BY:
    Student Name:         SANDEEP KUMAR GUPTA
    Registration Number:  25BAI10622
-   Branch / Program:     B.Tech Computer Science and Engineering
+   Branch / Program:     B.Tech Computer Science and Engineering in AIML
    Semester / Year:      Fall Semester 2026
+
 
 
 FACULTY GUIDE / EVALUATOR:
