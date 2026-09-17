@@ -1,0 +1,202 @@
+classDiagram
+    %% Abstract User & Roles
+    class User {
+        <<abstract>>
+        -String username
+        -String passwordHash
+        -String fullName
+        -String email
+        -UserRole role
+        -LocalDateTime createdAt
+        +getUsername() String
+        +getPasswordHash() String
+        +getFullName() String
+        +getRole() UserRole
+        +getDashboardCapabilities()* List~String~
+    }
+
+    class FacultyUser {
+        -String department
+        -String employeeId
+        +getDashboardCapabilities() List~String~
+    }
+
+    class StudentUser {
+        -String registrationNumber
+        +getRegistrationNumber() String
+        +getDashboardCapabilities() List~String~
+    }
+
+    class AdminUser {
+        +getDashboardCapabilities() List~String~
+    }
+
+    User <|-- FacultyUser
+    User <|-- StudentUser
+    User <|-- AdminUser
+
+    %% Domain Aggregates
+    class Student {
+        -String regNumber
+        -String name
+        -String email
+        -String department
+        -int semester
+        -double cgpa
+        -String mentorName
+        -AcademicRecord academicRecord
+        -RiskAssessment riskAssessment
+        -List~Intervention~ interventions
+        +getRegNumber() String
+        +getCgpa() double
+        +getAcademicRecord() AcademicRecord
+        +setAcademicRecord(AcademicRecord) void
+        +getRiskAssessment() RiskAssessment
+        +setRiskAssessment(RiskAssessment) void
+        +addIntervention(Intervention) void
+    }
+
+    class AcademicRecord {
+        -String courseCode
+        -double internalTest1
+        -double internalTest2
+        -double assignmentScore
+        -double labScore
+        -double quizScore
+        -double attendancePercentage
+        -double studyHoursPerWeek
+        -int backlogsCount
+        +calculateCompositeScore() double
+        +isAttendanceDeficient() boolean
+        +isFailingComposite() boolean
+    }
+
+    class RiskAssessment {
+        -RiskLevel riskLevel
+        -double riskScore
+        -double failureProbability
+        -double projectedFinalScore
+        -List~String~ keyRiskFactors
+        -String recommendation
+        +getRiskLevel() RiskLevel
+        +getFailureProbability() double
+        +getProjectedFinalScore() double
+        +getKeyRiskFactors() List~String~
+    }
+
+    class Intervention {
+        -String id
+        -String studentRegNumber
+        -String studentName
+        -String title
+        -String strategyName
+        -InterventionStatus status
+        -String notes
+        -String assignedMentor
+        +setStatus(InterventionStatus) void
+        +getStatus() InterventionStatus
+    }
+
+    Student *-- AcademicRecord
+    Student *-- RiskAssessment
+    Student o-- Intervention
+
+    %% Strategy Pattern Hierarchy
+    class InterventionStrategy {
+        <<interface>>
+        +getStrategyName()* String
+        +isApplicable(Student)* boolean
+        +createIntervention(Student, String)* Intervention
+    }
+
+    class RemedialClassStrategy {
+        +getStrategyName() String
+        +isApplicable(Student) boolean
+        +createIntervention(Student, String) Intervention
+    }
+
+    class AttendanceCounselingStrategy {
+        +getStrategyName() String
+        +isApplicable(Student) boolean
+        +createIntervention(Student, String) Intervention
+    }
+
+    class PeerTutoringStrategy {
+        +getStrategyName() String
+        +isApplicable(Student) boolean
+        +createIntervention(Student, String) Intervention
+    }
+
+    InterventionStrategy <|.. RemedialClassStrategy
+    InterventionStrategy <|.. AttendanceCounselingStrategy
+    InterventionStrategy <|.. PeerTutoringStrategy
+
+    %% Repository Layer
+    class StudentRepository {
+        <<interface>>
+        +save(Student)* Student
+        +findByRegNumber(String)* Optional~Student~
+        +findAll()* List~Student~
+        +deleteByRegNumber(String)* boolean
+        +count()* int
+        +flush()* void
+    }
+
+    class InMemoryStudentRepository {
+        #Map~String, Student~ studentStore
+        +save(Student) Student
+        +findByRegNumber(String) Optional~Student~
+        +findAll() List~Student~
+        +deleteByRegNumber(String) boolean
+    }
+
+    class FileStudentRepository {
+        -File storageFile
+        -File seedFile
+        +save(Student) Student
+        +flush() void
+    }
+
+    StudentRepository <|.. InMemoryStudentRepository
+    InMemoryStudentRepository <|-- FileStudentRepository
+
+    %% Service Layer
+    class StudentService {
+        -StudentRepository repository
+        +getAllStudents() List~Student~
+        +getStudent(String) Student
+        +createStudent(...) Student
+        +updateAcademicRecord(String, AcademicRecord) void
+        +searchStudents(String) List~Student~
+    }
+
+    class AnalyticsEngine {
+        +assessStudentRisk(Student) RiskAssessment
+        +runCohortRiskAssessment(List~Student~) void
+        +getAverageCgpa(List~Student~) double
+        +getAverageAttendance(List~Student~) double
+        +getRiskDistribution(List~Student~) Map
+        +getGradeDistribution(List~Student~) Map
+    }
+
+    class InterventionService {
+        -List~InterventionStrategy~ strategies
+        -Map~String, Intervention~ interventionRegistry
+        +generateInterventionsForStudent(Student) List~Intervention~
+        +generateBatchInterventions(List~Student~) int
+        +updateStatus(String, InterventionStatus, String) boolean
+    }
+
+    class AuthService {
+        -Map~String, User~ userRegistry
+        -User currentUser
+        +login(String, String) User
+        +logout() void
+        +getCurrentUser() User
+        +hashPassword(String)$ String
+    }
+
+    StudentService --> StudentRepository
+    InterventionService --> InterventionStrategy
+    InterventionService --> Student
+    AnalyticsEngine --> Student

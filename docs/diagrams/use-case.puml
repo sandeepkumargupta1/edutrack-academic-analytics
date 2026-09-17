@@ -1,0 +1,47 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam backgroundColor #FFFFFF
+
+actor "Faculty Member" as Faculty #2563EB
+actor "Administrator" as Admin #DC2626
+actor "Enrolled Student" as StudentActor #16A34A
+
+rectangle "EduTrack Academic Analytics CLI System" {
+    usecase "UC-1: Authenticate via Credentials" as UC1
+    usecase "UC-2: View Enrolled Student Directory" as UC2
+    usecase "UC-3: Search & Filter Students" as UC3
+    usecase "UC-4: Inspect Comprehensive Student Dossier" as UC4
+    usecase "UC-5: Record & Update Continuous Assessments" as UC5
+    usecase "UC-6: Review Cohort Analytics & Histograms" as UC6
+    usecase "UC-7: Run Early Risk Detection Engine" as UC7
+    usecase "UC-8: Trigger Automated Interventions" as UC8
+    usecase "UC-9: Manage & Update Intervention Lifecycle" as UC9
+    usecase "UC-10: Register New Student Profile" as UC10
+    usecase "UC-11: Export Cohort Performance to CSV" as UC11
+    usecase "UC-12: View Self Academic & Attendance Status" as UC12
+}
+
+Faculty --> UC1
+Faculty --> UC2
+Faculty --> UC3
+Faculty --> UC4
+Faculty --> UC5
+Faculty --> UC6
+Faculty --> UC7
+Faculty --> UC8
+Faculty --> UC9
+Faculty --> UC11
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC10
+Admin --> UC11
+
+StudentActor --> UC1
+StudentActor --> UC12
+
+@enduml

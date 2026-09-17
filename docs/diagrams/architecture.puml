@@ -1,0 +1,77 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam packageStyle rectangle
+skinparam roundcorner 8
+
+title EduTrack System Architecture Diagram
+
+package "Presentation Layer (Terminal CLI)" #E0F2FE {
+    class CliController
+    class MenuOption
+    class InputValidator
+    class TableRenderer
+    class AsciiChartRenderer
+}
+
+package "Service / Business Logic Layer" #DCFCE7 {
+    class AuthService
+    class StudentService
+    class AnalyticsEngine
+    class InterventionService
+}
+
+package "Behavioral Strategy Layer (GoF Strategy Pattern)" #FEF3C7 {
+    interface InterventionStrategy
+    class RemedialClassStrategy
+    class AttendanceCounselingStrategy
+    class PeerTutoringStrategy
+    
+    InterventionStrategy <|.. RemedialClassStrategy
+    InterventionStrategy <|.. AttendanceCounselingStrategy
+    InterventionStrategy <|.. PeerTutoringStrategy
+}
+
+package "Domain Layer (Entities & Models)" #F3E8FF {
+    abstract class User
+    class FacultyUser
+    class StudentUser
+    class AdminUser
+    class Student
+    class AcademicRecord
+    class RiskAssessment
+    class Intervention
+
+    User <|-- FacultyUser
+    User <|-- StudentUser
+    User <|-- AdminUser
+
+    Student *-- AcademicRecord
+    Student *-- RiskAssessment
+    Student o-- Intervention
+}
+
+package "Persistence Layer (Data Access & CSV Storage)" #FEE2E2 {
+    interface StudentRepository
+    class InMemoryStudentRepository
+    class FileStudentRepository
+    class CsvHandler
+    file "students_db.csv\nstudents_seed.csv" as CSV_FILE
+
+    StudentRepository <|.. InMemoryStudentRepository
+    InMemoryStudentRepository <|-- FileStudentRepository
+    FileStudentRepository ..> CsvHandler
+    CsvHandler ..> CSV_FILE
+}
+
+CliController --> AuthService
+CliController --> StudentService
+CliController --> AnalyticsEngine
+CliController --> InterventionService
+
+StudentService --> StudentRepository
+StudentService --> Student
+AnalyticsEngine --> Student
+InterventionService --> InterventionStrategy
+InterventionService --> Student
+
+@enduml

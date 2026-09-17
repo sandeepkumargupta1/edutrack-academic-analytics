@@ -1,0 +1,40 @@
+graph LR
+    Faculty((Faculty Member))
+    Admin((System Administrator))
+    StudentActor((Enrolled Student))
+
+    subgraph EduTrack CLI Boundary
+        UC1[UC-1: Authenticate via Credentials]
+        UC2[UC-2: View Enrolled Student Roster]
+        UC3[UC-3: Search & Filter Students]
+        UC4[UC-4: Inspect Comprehensive Student Dossier]
+        UC5[UC-5: Enter & Update Assessment Marks]
+        UC6[UC-6: Review Cohort Analytics & Histograms]
+        UC7[UC-7: Run Early Risk Detection & Alert Roster]
+        UC8[UC-8: Trigger Strategy-Driven Interventions]
+        UC9[UC-9: Manage & Resolve Interventions]
+        UC10[UC-10: Register New Student Profile]
+        UC11[UC-11: Export Cohort Data to CSV]
+        UC12[UC-12: View Personal Academic Dossier & Attendance]
+    end
+
+    Faculty --> UC1
+    Faculty --> UC2
+    Faculty --> UC3
+    Faculty --> UC4
+    Faculty --> UC5
+    Faculty --> UC6
+    Faculty --> UC7
+    Faculty --> UC8
+    Faculty --> UC9
+    Faculty --> UC11
+
+    Admin --> UC1
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC10
+    Admin --> UC11
+
+    StudentActor --> UC1
+    StudentActor --> UC12

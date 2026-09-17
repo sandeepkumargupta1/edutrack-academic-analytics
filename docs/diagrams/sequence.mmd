@@ -1,0 +1,48 @@
+sequenceDiagram
+    autonumber
+    actor Faculty as Faculty User
+    participant CLI as CliController
+    participant Auth as AuthService
+    participant Svc as StudentService
+    participant Repo as FileStudentRepository
+    participant Engine as AnalyticsEngine
+    participant IntSvc as InterventionService
+    participant Strat as InterventionStrategy
+
+    Note over Faculty, Auth: Phase 1: Authentication & Session Setup
+    Faculty ->> CLI: Enter username ("faculty") and password ("admin123")
+    CLI ->> Auth: login("faculty", "admin123")
+    Auth ->> Auth: hashPassword("admin123") -> SHA-256
+    Auth -->> CLI: FacultyUser instance (authenticated)
+
+    Note over Faculty, Repo: Phase 2: Assessment Data Input & Storage
+    Faculty ->> CLI: Select Option 5 (Update Marks: IT1=18.0, IT2=16.0, Att=58.0%)
+    CLI ->> Svc: updateAcademicRecord("23BCE1015", newRecord)
+    Svc ->> Repo: findByRegNumber("23BCE1015")
+    Repo -->> Svc: Student instance
+    Svc ->> Svc: student.setAcademicRecord(newRecord)
+    Svc ->> Repo: save(student)
+    Repo ->> Repo: flush() -> serialize to students_db.csv
+    Repo -->> Svc: Saved Student
+
+    Note over CLI, Engine: Phase 3: Risk Analytics & Causal Attribution
+    CLI ->> Engine: assessStudentRisk(student)
+    Engine ->> Engine: calculateCompositeScore() -> 39.5 / 100.0
+    Engine ->> Engine: Evaluate Attendance Deficit (58.0% < 75.0%)
+    Engine ->> Engine: Compute failureProbability (83.9%) via Sigmoid
+    Engine ->> Engine: Determine RiskLevel.HIGH & Compile Risk Drivers
+    Engine -->> CLI: RiskAssessment instance (HIGH, 83.9%)
+
+    Note over CLI, Strat: Phase 4: Strategy-Driven Intervention Generation
+    CLI ->> IntSvc: generateInterventionsForStudent(student)
+    loop For each registered strategy (Remedial, Attendance, PeerTutoring)
+        IntSvc ->> Strat: isApplicable(student)
+        Strat -->> IntSvc: true (deficiency matches criteria)
+        IntSvc ->> Strat: createIntervention(student, "INT-1008")
+        Strat -->> IntSvc: Intervention instance
+        IntSvc ->> Svc: student.addIntervention(intervention)
+    end
+    IntSvc -->> CLI: List<Intervention> (Remedial Coaching, Attendance Advisory)
+
+    Note over CLI, Faculty: Phase 5: Displaying Formatted Results
+    CLI -->> Faculty: Render ASCII Dossier, Risk Gauge & Assigned Action Plans

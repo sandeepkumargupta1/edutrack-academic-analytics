@@ -1,0 +1,54 @@
+erDiagram
+    STUDENT_CSV_RECORD {
+        string reg_number PK "Unique Registration Key (e.g. 23BCE1001)"
+        string name "Student Full Name"
+        string email "Institutional Email"
+        string department "Academic Department/Branch"
+        int semester "Current Semester (1-10)"
+        float cgpa "Cumulative GPA (0.0-10.0)"
+        string mentor_name "Assigned Faculty Advisor"
+        string course_code "Course Code (e.g. CSE2001)"
+        float internal_test_1 "Marks out of 50.0"
+        float internal_test_2 "Marks out of 50.0"
+        float assignment_score "Marks out of 20.0"
+        float lab_score "Marks out of 30.0"
+        float quiz_score "Marks out of 20.0"
+        float attendance_percentage "Attendance (0.0-100.0%)"
+        float study_hours_per_week "Self-study Allocation (hrs/wk)"
+        int backlogs_count "Active Arrears / Backlogs"
+    }
+
+    IN_MEMORY_RISK_ASSESSMENT {
+        string student_reg_number FK "Reference to Student"
+        string risk_level "LOW | MODERATE | HIGH"
+        float risk_score "Continuous Risk Score (0-100)"
+        float failure_probability "Computed Sigmoid Probability (0.0-1.0)"
+        float projected_final_score "Estimated End-Sem Score"
+        string key_risk_factors "Delimited Causal Drivers"
+        datetime assessed_at "Timestamp of Evaluation"
+    }
+
+    IN_MEMORY_INTERVENTION {
+        string intervention_id PK "Unique ID (e.g. INT-1005)"
+        string student_reg_number FK "Target Student Registration"
+        string student_name "Student Full Name"
+        string title "Action Title"
+        string strategy_name "Applied Strategy Name"
+        string status "PENDING | IN_PROGRESS | RESOLVED"
+        string notes "Advisory Notes & Actions"
+        string assigned_mentor "Proctor in Charge"
+        datetime created_at "Creation Date"
+        datetime resolved_at "Resolution Date"
+    }
+
+    USER_ACCOUNT {
+        string username PK "Account Username"
+        string password_hash "SHA-256 Digest"
+        string full_name "Display Name"
+        string email "Contact Email"
+        string role "FACULTY | ADMIN | STUDENT"
+    }
+
+    STUDENT_CSV_RECORD ||--|| IN_MEMORY_RISK_ASSESSMENT : "evaluates into"
+    STUDENT_CSV_RECORD ||--o{ IN_MEMORY_INTERVENTION : "receives"
+    USER_ACCOUNT ||--o{ STUDENT_CSV_RECORD : "advises / proctors"

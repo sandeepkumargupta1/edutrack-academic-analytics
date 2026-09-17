@@ -1,0 +1,67 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam roundcorner 6
+
+title EduTrack File-Based CSV Storage & In-Memory Entity Schema Design
+
+entity "Student CSV Record\n(students_db.csv)" as StudentRecord #E0F2FE {
+    * reg_number : VARCHAR(20) [PK]
+    --
+    * name : VARCHAR(100)
+    * email : VARCHAR(100)
+    * department : VARCHAR(50)
+    * semester : INTEGER (1-10)
+    * cgpa : DOUBLE (0.0-10.0)
+    * mentor_name : VARCHAR(100)
+    * course_code : VARCHAR(20)
+    * internal_test_1 : DOUBLE (0.0-50.0)
+    * internal_test_2 : DOUBLE (0.0-50.0)
+    * assignment_score : DOUBLE (0.0-20.0)
+    * lab_score : DOUBLE (0.0-30.0)
+    * quiz_score : DOUBLE (0.0-20.0)
+    * attendance_percentage : DOUBLE (0.0-100.0)
+    * study_hours_per_week : DOUBLE (>=0.0)
+    * backlogs_count : INTEGER (>=0)
+}
+
+entity "In-Memory RiskAssessment" as RiskAssessment #FEF3C7 {
+    * student_reg_number : VARCHAR(20) [FK]
+    --
+    * risk_level : RiskLevel (LOW / MODERATE / HIGH)
+    * risk_score : DOUBLE (0.0-100.0)
+    * failure_probability : DOUBLE (0.0-1.0)
+    * projected_final_score : DOUBLE (0.0-100.0)
+    * key_risk_factors : List<String>
+    * recommendation : String
+    * assessed_at : LocalDateTime
+}
+
+entity "In-Memory Intervention" as Intervention #DCFCE7 {
+    * id : VARCHAR(20) [PK]
+    --
+    * student_reg_number : VARCHAR(20) [FK]
+    * student_name : VARCHAR(100)
+    * title : VARCHAR(150)
+    * strategy_name : VARCHAR(60)
+    * status : InterventionStatus (PENDING / IN_PROGRESS / RESOLVED)
+    * notes : String
+    * assigned_mentor : VARCHAR(100)
+    * created_at : LocalDateTime
+    * resolved_at : LocalDateTime
+}
+
+entity "User Credential Registry" as UserAccount #F3E8FF {
+    * username : VARCHAR(50) [PK]
+    --
+    * password_hash : VARCHAR(64) [SHA-256]
+    * full_name : VARCHAR(100)
+    * email : VARCHAR(100)
+    * role : UserRole (FACULTY / ADMIN / STUDENT)
+    * created_at : LocalDateTime
+}
+
+StudentRecord ||--|| RiskAssessment : "generates evaluation"
+StudentRecord ||--o{ Intervention : "targets remedial actions"
+UserAccount ||--o{ StudentRecord : "mentors & proctors"
+
+@enduml

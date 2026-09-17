@@ -1,0 +1,156 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam backgroundColor #FFFFFF
+skinparam roundcorner 6
+
+title EduTrack Comprehensive UML Class Diagram
+
+abstract class User {
+    - username: String
+    - passwordHash: String
+    - fullName: String
+    - email: String
+    - role: UserRole
+    - createdAt: LocalDateTime
+    + {abstract} getDashboardCapabilities(): List<String>
+}
+
+class FacultyUser {
+    - department: String
+    - employeeId: String
+    + getDashboardCapabilities(): List<String>
+}
+
+class StudentUser {
+    - registrationNumber: String
+    + getRegistrationNumber(): String
+    + getDashboardCapabilities(): List<String>
+}
+
+class AdminUser {
+    + getDashboardCapabilities(): List<String>
+}
+
+User <|-- FacultyUser
+User <|-- StudentUser
+User <|-- AdminUser
+
+class Student {
+    - regNumber: String
+    - name: String
+    - email: String
+    - department: String
+    - semester: int
+    - cgpa: double
+    - mentorName: String
+    - academicRecord: AcademicRecord
+    - riskAssessment: RiskAssessment
+    - interventions: List<Intervention>
+    + addIntervention(Intervention): void
+}
+
+class AcademicRecord {
+    - courseCode: String
+    - internalTest1: double
+    - internalTest2: double
+    - assignmentScore: double
+    - labScore: double
+    - quizScore: double
+    - attendancePercentage: double
+    - studyHoursPerWeek: double
+    - backlogsCount: int
+    + calculateCompositeScore(): double
+    + isAttendanceDeficient(): boolean
+}
+
+class RiskAssessment {
+    - riskLevel: RiskLevel
+    - riskScore: double
+    - failureProbability: double
+    - projectedFinalScore: double
+    - keyRiskFactors: List<String>
+    - recommendation: String
+}
+
+class Intervention {
+    - id: String
+    - studentRegNumber: String
+    - studentName: String
+    - title: String
+    - strategyName: String
+    - status: InterventionStatus
+    - notes: String
+    - assignedMentor: String
+    + setStatus(InterventionStatus): void
+}
+
+Student *-- AcademicRecord
+Student *-- RiskAssessment
+Student o-- Intervention
+
+interface InterventionStrategy {
+    + {abstract} getStrategyName(): String
+    + {abstract} isApplicable(Student): boolean
+    + {abstract} createIntervention(Student, String): Intervention
+}
+
+class RemedialClassStrategy implements InterventionStrategy
+class AttendanceCounselingStrategy implements InterventionStrategy
+class PeerTutoringStrategy implements InterventionStrategy
+
+interface StudentRepository {
+    + {abstract} save(Student): Student
+    + {abstract} findByRegNumber(String): Optional<Student>
+    + {abstract} findAll(): List<Student>
+    + {abstract} deleteByRegNumber(String): boolean
+    + {abstract} count(): int
+    + {abstract} flush(): void
+}
+
+class InMemoryStudentRepository implements StudentRepository {
+    # studentStore: Map<String, Student>
+}
+
+class FileStudentRepository extends InMemoryStudentRepository {
+    - storageFile: File
+    - seedFile: File
+    + flush(): void
+}
+
+class StudentService {
+    - repository: StudentRepository
+    + getAllStudents(): List<Student>
+    + getStudent(String): Student
+    + createStudent(...): Student
+    + updateAcademicRecord(String, AcademicRecord): void
+}
+
+class AnalyticsEngine {
+    + assessStudentRisk(Student): RiskAssessment
+    + runCohortRiskAssessment(List<Student>): void
+    + getAverageCgpa(List<Student>): double
+    + getAverageAttendance(List<Student>): double
+}
+
+class InterventionService {
+    - strategies: List<InterventionStrategy>
+    - interventionRegistry: Map<String, Intervention>
+    + generateInterventionsForStudent(Student): List<Intervention>
+    + generateBatchInterventions(List<Student>): int
+}
+
+class AuthService {
+    - userRegistry: Map<String, User>
+    - currentUser: User
+    + login(String, String): User
+    + logout(): void
+    + {static} hashPassword(String): String
+}
+
+StudentService --> StudentRepository
+StudentService --> Student
+InterventionService --> InterventionStrategy
+InterventionService --> Student
+AnalyticsEngine --> Student
+
+@enduml

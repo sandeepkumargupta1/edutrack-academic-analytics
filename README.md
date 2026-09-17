@@ -1,66 +1,226 @@
 # EduTrack: Academic Performance Analytics & Student Intervention Platform
 
 > **VITyarthi Flipped Course Evaluated Project Submission**  
-> **Course**: Object Oriented Programming using Java (CSE1007 / CSE2001) / Software Engineering  
-> **Platform**: Command-Line Interface (CLI) Pure Java SE System  
+> **Course Title**: Object Oriented Programming using Java / Software Engineering  
+> **Course Code**: CSE1007 / CSE2001  
+> **Execution Mode**: 100% Pure Java SE Command-Line Interface (CLI)  
 > **Repository Root URL**: `https://github.com/sandeepkumargupta1/edutrack-academic-analytics`
 
 ---
 
-## 1. Project Overview
+## 1. Project Title & Overview
 
-**EduTrack** is a modular, high-performance Java Command-Line Interface (CLI) system designed to solve the critical problem of late academic failure detection in higher education institutions. Rather than discovering academic failure and attendance shortages only after final semester examinations, EduTrack continuously aggregates continuous assessment test scores (CAT-1, CAT-2), lab marks, quizzes, weekly study hours, and biometric attendance.
+**EduTrack** is an academic performance analytics and student intervention management system engineered in pure Java SE. It addresses the systemic problem of delayed academic failure detection in university continuous assessment environments. 
 
-Using a multi-factor risk assessment algorithm, EduTrack computes failure probabilities ($P(\text{Fail}) \in [0.0, 1.0]$), pinpoints explicit causal risk drivers (such as attendance deficiency, low internal scores, or backlog accumulation), and automatically triggers personalized academic interventions using the **GoF Strategy Pattern** (`RemedialClassStrategy`, `AttendanceCounselingStrategy`, `PeerTutoringStrategy`).
-
----
-
-## 2. Key Features
-
-- **Role-Based Access Control (RBAC)**: Secure authentication with SHA-256 hashed passwords separating `Faculty`, `Administrator`, and `Student` capabilities.
-- **Continuous Academic Assessment Processing**: Complete CRUD operations for student profiles, course scores, continuous internals, and attendance metrics.
-- **Explainable Predictive Risk Engine**: Quantitative risk modeling that classifies students into `LOW`, `MODERATE`, and `HIGH` risk tiers while generating human-interpretable causal risk driver summaries.
-- **Automated Academic Intervention Engine**: Uses the Gang-of-Four (GoF) Strategy Pattern to automatically instantiate remedial sessions, attendance advisories, or peer tutoring circles based on student diagnostics.
-- **Interactive Terminal UI with ASCII Visualizations**:
-  - Bordered, ANSI-colored data tables.
-  - Risk meter gauges (`[██████████░░░░░░░░░░] 48.0%`).
-  - Terminal histograms for continuous assessment grade distributions and cohort risk breakdowns.
-- **Dual Execution Modes**:
-  - **Interactive Mode**: Guided terminal menu for interactive management and live score entry.
-  - **Headless Evaluation Mode (`--report` / `--batch`)**: Non-interactive command-line execution ideal for automated grading pipelines, compiling and outputting complete analytical audits with exit code 0.
-- **Zero-External-Dependency Runtime**: Built purely on standard Java SE (JDK 17/21/26). Does not require third-party GUI installations or external server setups.
-- **Robust Built-In Automated Test Suite**: Comprehensive unit testing framework verifying models, services, analytics, and CSV persistence with 100% pass rates.
+Rather than identifying failing students only after final examinations or semester detention lists are published, EduTrack continuously aggregates continuous assessment test scores (CAT-1, CAT-2), laboratory practicals, assignment submissions, quizzes, and biometric attendance logs. Using a multi-factor analytical scoring algorithm with non-linear sigmoid probability mapping, EduTrack computes failure risk, isolates underlying causal risk factors, and automatically generates personalized remedial action plans using the **GoF Strategy Pattern**.
 
 ---
 
-## 3. Technologies & Tools Used
+## 2. Problem Statement
+
+In higher education institutions:
+1. **Late Failure Discovery**: Learning deficiencies and attendance shortages below the mandatory 75% statutory threshold are often identified only after semester examinations—when corrective measures are no longer possible.
+2. **Unidimensional Evaluation**: Conventional grade books record raw scores without diagnosing root causes (e.g. chronic absenteeism vs. difficulty with problem-solving vs. backlog accumulation).
+3. **Lack of Structured Intervention Tracking**: Faculty proctoring and remedial tutorials are frequently coordinated informally without auditable tracking of student progress.
+
+---
+
+## 3. Objectives
+
+- Deliver a high-performance, modular Java CLI platform for continuous academic evaluation.
+- Compute objective failure probability metrics ($P(\text{Fail}) \in [0.0, 1.0]$) and categorize students into `LOW`, `MODERATE`, and `HIGH` risk tiers.
+- Identify specific causal drivers for at-risk students to enable explainable academic advising.
+- Automatically generate personalized remedial interventions via the Gang-of-Four (GoF) Strategy Pattern.
+- Provide a dual-mode CLI supporting both interactive faculty sessions and automated headless evaluation (`--report`) for grading pipelines.
+- Ensure durable file-backed persistence using UTF-8 CSV storage with zero external database dependencies.
+
+---
+
+## 4. Scope
+
+- **Included**: Demographic profiling, continuous assessment marks entry (IT1, IT2, Lab, Quiz, Assignment), attendance tracking, multi-factor risk computation, automated intervention generation, lifecycle status updates, ASCII visualizations, and CSV import/export.
+- **Excluded**: Heavy desktop GUI frameworks (Swing/JavaFX) and external database server engines (MySQL/PostgreSQL), ensuring 100% terminal portability as mandated by the VITyarthi evaluation guidelines.
+
+---
+
+## 5. Target Users
+
+- **Course Faculty & Instructors**: Enter assessment marks, inspect student performance, and assign remedial coursework.
+- **Academic Counselors & Faculty Mentors (Proctors)**: Track attendance margins relative to the 75% threshold, review risk alerts, and record intervention notes.
+- **Department Heads & Administrators**: Audit cohort-wide grade distribution histograms and evaluate intervention efficacy.
+- **Enrolled Students**: Inspect personal continuous assessment records and assigned peer mentoring circles.
+
+---
+
+## 6. Functional Requirements & Major Modules
+
+The system is organized into five major functional modules:
+
+### Module 1: Authentication & Role-Based Access Control (RBAC)
+- Secure credential verification matching SHA-256 password digests.
+- Role capability segregation for `FacultyUser`, `AdminUser`, and `StudentUser`.
+
+### Module 2: Student Profile & Continuous Assessment Management
+- Full CRUD operations on student demographic records.
+- Input validation on continuous assessment scores and attendance rates.
+- File-backed CSV persistence with transactional state synchronization.
+
+### Module 3: Computational Risk Assessment Engine
+- Multi-factor risk calculation combining assessment deficits, attendance shortages, backlogs, and study hours.
+- Sigmoid-style probabilistic mapping into `LOW`, `MODERATE`, and `HIGH` risk tiers.
+- Automatic extraction of causal risk drivers (e.g., `Attendance shortage: 48.5% (< 75.0% statutory threshold)`).
+
+### Module 4: Strategy-Driven Intervention Engine
+- Dynamic instantiation of action plans using the GoF Strategy Pattern:
+  - `RemedialClassStrategy`: Assigned for internal test marks $< 22/50$ or composite $< 50$.
+  - `AttendanceCounselingStrategy`: Assigned for attendance $< 75.0\%$.
+  - `PeerTutoringStrategy`: Assigned for backlogs or moderate risk status.
+- State tracking (`PENDING` $\to$ `IN_PROGRESS` $\to$ `RESOLVED` / `ESCALATED`).
+
+### Module 5: Terminal Visualization & Headless Audit Engine
+- Bordered ASCII tables with auto-padding and ANSI syntax colors.
+- ASCII horizontal bar charts for grade distributions and risk breakdowns.
+- Non-interactive headless audit mode (`--report`) for automated CI/CD and grading pipelines.
+
+---
+
+## 7. Non-Functional Requirements
+
+- **Performance**: $O(1)$ in-memory lookups via `ConcurrentHashMap`; sub-15ms cohort risk evaluation across 1,000 records.
+- **Security**: SHA-256 cryptographic password hashing; programmatic RBAC method guards.
+- **Maintainability**: Strict 5-tier layered architecture separating CLI, Service, Strategy, Domain, and Repository layers.
+- **Reliability & Error Handling**: Graceful recovery from malformed inputs and custom exception hierarchy (`StudentNotFoundException`, `DuplicateRecordException`, `InvalidAcademicRecordException`, `AuthenticationException`).
+- **Usability**: Bordered ASCII tables, color-coded risk badges, and clear navigation prompts.
+
+---
+
+## 8. Key Features
+
+- **Zero-Dependency Architecture**: Runs on standard Java SE (JDK 17+) without foreign frameworks.
+- **Dual Execution Modes**: Interactive terminal menu and headless batch evaluation (`--report`).
+- **Explainable Analytics**: Explains *why* a student is at risk, not just a score.
+- **Automated Interventions**: Dynamically selects action plans using polymorphism.
+- **Durable CSV Storage**: Working database (`students_db.csv`) auto-synced on all mutations.
+
+---
+
+## 9. OOP Concepts & Design Patterns Used
+
+| Principle / Pattern | Concrete Implementation in EduTrack |
+| :--- | :--- |
+| **Encapsulation** | Strict private fields, validated setters, and domain invariant enforcement in `AcademicRecord`, `Student`, and `User`. |
+| **Inheritance** | `User` abstract base class extended by `FacultyUser`, `StudentUser`, and `AdminUser`. |
+| **Polymorphism** | Abstract method `getDashboardCapabilities()` returning role-specific permissions; `InterventionStrategy` executed polymorphically. |
+| **Abstraction** | Interfaces `StudentRepository` and `InterventionStrategy` decoupling business logic from concrete storage and algorithms. |
+| **Collections & Streams** | `ConcurrentHashMap` for $O(1)$ indexing; Java Stream API for filtering, sorting, and statistical reductions (`summaryStatistics`). |
+| **GoF Strategy Pattern** | `InterventionStrategy` interface with concrete strategies `RemedialClassStrategy`, `AttendanceCounselingStrategy`, and `PeerTutoringStrategy`. |
+| **Repository Pattern** | `StudentRepository` interface implemented by `InMemoryStudentRepository` and decorated by `FileStudentRepository`. |
+| **Service-Layer Architecture** | Clean boundary between CLI presentation and domain services (`AuthService`, `StudentService`, `AnalyticsEngine`, `InterventionService`). |
+
+---
+
+## 10. Architecture & Diagrams
+
+EduTrack follows a **5-Tier Layered Architecture**:
+
+```
+Presentation Layer (CLI) -> Service Layer -> Strategy Layer -> Domain Layer -> Persistence Layer (CSV)
+```
+
+Formal diagram assets are provided in the `docs/` directory:
+- **System Architecture**: [`docs/architecture-diagram.png`](docs/architecture-diagram.png) ([Mermaid](docs/diagrams/architecture.mmd) / [PlantUML](docs/diagrams/architecture.puml))
+- **Operational Workflow**: [`docs/workflow-diagram.png`](docs/workflow-diagram.png) ([Mermaid](docs/diagrams/workflow.mmd) / [PlantUML](docs/diagrams/workflow.puml))
+- **UML Use Case**: [`docs/use-case-diagram.png`](docs/use-case-diagram.png) ([Mermaid](docs/diagrams/use-case.mmd) / [PlantUML](docs/diagrams/use-case.puml))
+- **UML Class Diagram**: [`docs/class-diagram.png`](docs/class-diagram.png) ([Mermaid](docs/diagrams/class.mmd) / [PlantUML](docs/diagrams/class.puml))
+- **UML Sequence Diagram**: [`docs/sequence-diagram.png`](docs/sequence-diagram.png) ([Mermaid](docs/diagrams/sequence.mmd) / [PlantUML](docs/diagrams/sequence.puml))
+- **Storage / ER Schema**: [`docs/er-diagram.png`](docs/er-diagram.png) ([Mermaid](docs/diagrams/er.mmd) / [PlantUML](docs/diagrams/er.puml))
+
+---
+
+## 11. Technologies & Tools
 
 - **Language**: Java 17 / 21 / 26 (Standard Java SE)
-- **Paradigm**: Object-Oriented Programming (Encapsulation, Inheritance, Polymorphism, Abstraction, Strategy Pattern, Repository Pattern)
-- **Data Structures**: Java Collections Framework (`ConcurrentHashMap`, `ArrayList`, `TreeSet`, `Queue`) and Stream API (`filter`, `map`, `sorted`, `summaryStatistics`)
-- **Persistence**: File-backed CSV repository (`FileStudentRepository`, `CsvHandler`) with automatic transactional state syncing
-- **Security**: Cryptographic password hashing (SHA-256 with byte array salt conversion)
-- **Testing**: Built-in automated unit test runner (`com.edutrack.TestRunner`)
-- **Build / Packaging**: Standard `javac` compilation scripts (`compile.bat`, `compile.sh`) and optional Maven `pom.xml`
+- **Runtime**: Java Virtual Machine (JVM)
+- **Compiler**: `javac` with UTF-8 encoding
+- **Build Scripts**: Windows Batch (`compile.bat`, `run.bat`, `test.bat`) & Unix Shell (`compile.sh`, `run.sh`, `test.sh`)
+- **Version Control**: Git (GitHub)
+- **Persistence**: UTF-8 flat-file CSV storage with concurrent hash indexing
 
 ---
 
-## 4. Steps to Install & Run the Project
+## 12. Project Structure
+
+```
+.
+├── compile.bat / compile.sh       # One-click compile scripts
+├── run.bat / run.sh               # One-click interactive CLI execution scripts
+├── test.bat / test.sh             # One-click automated test runner scripts
+├── pom.xml                        # Maven configuration
+├── .gitignore                     # Git configuration
+├── statement.md                   # Problem Statement & Scope
+├── README.md                      # Evaluator Setup & Usage Guide
+├── data/
+│   ├── students_seed.csv          # Initial seed dataset (20 student profiles)
+│   └── students_db.csv           # Persistent working database file
+├── docs/
+│   ├── README.md                  # Documentation and diagram index
+│   ├── requirements.md            # Dedicated SRS requirements document
+│   ├── report-outline.md          # 15-section project report structure
+│   ├── vityarthi-compliance.md    # Formal compliance audit table
+│   ├── design_artefacts.md        # Technical architecture and diagram source
+│   ├── PROJECT_REPORT.md          # Complete project report in Markdown
+│   ├── PROJECT_REPORT.pdf         # Compiled PDF project report
+│   ├── architecture-diagram.png   # Generated architecture diagram
+│   ├── workflow-diagram.png       # Generated workflow diagram
+│   ├── use-case-diagram.png       # Generated use case diagram
+│   ├── class-diagram.png          # Generated class diagram
+│   ├── sequence-diagram.png       # Generated sequence diagram
+│   ├── er-diagram.png             # Generated storage schema diagram
+│   ├── diagrams/                  # Source Mermaid (.mmd) and PlantUML (.puml) files
+│   └── screenshots/               # Terminal execution captures and guidance
+│       └── README.md
+├── src/
+│   └── com/
+│       └── edutrack/
+│           ├── EduTrackApp.java   # Main CLI entrypoint
+│           ├── model/             # Domain entities (User, Student, AcademicRecord, etc.)
+│           ├── repository/        # DAO interfaces & file implementations
+│           ├── service/           # Business services (Auth, Student, Analytics, Intervention)
+│           ├── strategy/          # GoF Strategy pattern implementations
+│           ├── exception/         # Custom exception hierarchy
+│           ├── util/              # Table, ANSI color, CSV, and ASCII chart utilities
+│           └── cli/               # CLI controller, menus, and input validators
+└── test/
+    └── com/
+        └── edutrack/
+            ├── TestRunner.java                        # Standalone unit test harness
+            ├── service/
+            │   ├── AuthServiceTest.java               # Auth & hash tests
+            │   ├── StudentServiceTest.java            # Student CRUD tests
+            │   ├── AnalyticsEngineTest.java           # Risk scoring tests
+            │   ├── InterventionServiceTest.java       # Strategy pattern tests
+            │   └── InputValidationAndSecurityTest.java# Validation & security tests
+            └── util/
+                ├── CsvHandlerTest.java                # CSV persistence tests
+                └── DiagramImageRenderer.java          # Diagram PNG rendering utility
+```
+
+---
+
+## 13. Installation & Setup Instructions
 
 ### Prerequisites
 - Java Development Kit (JDK 17 or higher: JDK 17, 21, or 26).
-- Terminal environment (Windows Command Prompt / PowerShell, macOS Terminal, or Linux Bash).
+- Standard terminal (Windows Command Prompt, PowerShell, macOS Terminal, or Linux Bash).
 
-### 4.1 Clone the Repository
+### 13.1 Clone the Repository
 ```bash
 git clone https://github.com/sandeepkumargupta1/edutrack-academic-analytics.git
 cd edutrack-academic-analytics
 ```
 
-### 4.2 Compile the Code
-EduTrack provides one-click scripts for compilation without requiring Maven:
-
-**On Windows (Command Prompt / PowerShell):**
+### 13.2 Compile the Code
+**On Windows:**
 ```cmd
 compile.bat
 ```
@@ -71,15 +231,11 @@ chmod +x compile.sh run.sh test.sh
 ./compile.sh
 ```
 
-*(Optional: If you prefer building with Maven, execute `mvn clean compile`)*
-
 ---
 
-### 4.3 Run the Application (Command-Line)
+## 14. How to Run the Application
 
-#### Option A: Interactive Terminal Mode
-Launch the interactive CLI dashboard:
-
+### 14.1 Interactive Terminal Mode
 **On Windows:**
 ```cmd
 run.bat
@@ -90,21 +246,21 @@ run.bat
 ./run.sh
 ```
 
-**Or using direct Java invocation:**
+**Direct Java Command:**
 ```bash
 java "-Dfile.encoding=UTF-8" -cp bin com.edutrack.EduTrackApp
 ```
 
-#### Default Test Login Credentials:
-| Role | Username | Password | Access Capabilities |
+#### Pre-Configured Test User Credentials:
+| Role | Username | Password | Permitted Operations |
 | :--- | :--- | :--- | :--- |
-| **Faculty** | `faculty` | `admin123` | View roster, update marks, run analytics, trigger interventions, export CSV |
-| **Administrator** | `admin` | `root123` | Full system access, user registry management, cohort audit |
-| **Student** | `student` | `student123` | View personal dossier, attendance status, assigned interventions |
+| **Faculty Member** | `faculty` | `admin123` | View directory, enter marks, run analytics, trigger interventions, export CSV |
+| **Administrator** | `admin` | `root123` | Full administrative control, user registry inspection, cohort audit |
+| **Student** | `student` | `student123` | Inspect personal academic records, attendance margin, assigned interventions |
 
 ---
 
-#### Option B: Non-Interactive Headless Evaluation Mode (`--report`)
+### 14.2 Headless Automated Evaluation Mode (`--report`)
 The automated evaluation pipeline can execute EduTrack in headless mode to verify student assessment calculations, risk algorithms, and intervention generation instantly without any manual input:
 
 **On Windows:**
@@ -117,19 +273,13 @@ run.bat --report
 ./run.sh --report
 ```
 
-**Or direct command:**
-```bash
-java "-Dfile.encoding=UTF-8" -cp bin com.edutrack.EduTrackApp --report
-```
-
 ---
 
-## 5. Instructions for Testing
+## 15. How to Test & Verification
 
-EduTrack includes a self-contained automated unit test suite (`TestRunner`) that validates domain rules, calculations, duplicate constraints, and CSV round-trips.
+EduTrack includes a self-contained automated unit test harness (`TestRunner`) that runs without external testing library JARs.
 
-### Running the Automated Test Suite:
-
+### Running the Test Suite:
 **On Windows:**
 ```cmd
 test.bat
@@ -140,135 +290,75 @@ test.bat
 ./test.sh
 ```
 
-**Or direct command:**
-```bash
-java "-Dfile.encoding=UTF-8" -cp bin com.edutrack.TestRunner
-```
-
-### Expected Test Output:
-```
-================================================================================
-                   EDUTRACK AUTOMATED UNIT TEST RUNNER
-================================================================================
-
-Running: AuthServiceTest
-  ✔ testInvalidPasswordRejection                  [PASSED]
-  ✔ testPasswordHashingConsistency                [PASSED]
-  ✔ testUnknownUserRejection                      [PASSED]
-  ✔ testRoleAuthorization                         [PASSED]
-  ✔ testValidFacultyLogin                         [PASSED]
-
-Running: StudentServiceTest
-  ? testDuplicateRegistrationRejection            [PASSED]
-  ✔ testCreateAndRetrieveStudent                  [PASSED]
-  ✔ testNonExistentStudentThrowsException         [PASSED]
-  ✔ testUpdateAcademicRecord                      [PASSED]
-  ✔ testSearchStudents                            [PASSED]
-  ✔ testDeleteStudent                             [PASSED]
-
-Running: AnalyticsEngineTest
-  ✔ testCohortAveragesCalculation                 [PASSED]
-  ✔ testGradeDistributionBuckets                  [PASSED]
-  ✔ testHighRiskStudentAssessment                 [PASSED]
-  ✔ testLowRiskStudentAssessment                  [PASSED]
-  ✔ testAttendanceDeficiencyDetection             [PASSED]
-
-Running: InterventionServiceTest
-  ✔ testUpdateInterventionStatus                  [PASSED]
-  ✔ testAttendanceInterventionGeneratedForDeficientAttendance [PASSED]
-  ✔ testRemedialInterventionGeneratedForLowInternals [PASSED]
-
-Running: CsvHandlerTest
-  ✔ testSaveAndLoadRoundtrip                      [PASSED]
-
-================================================================================
- TOTAL TESTS: 20 | PASSED: 20 | FAILED: 0
-================================================================================
-ALL TESTS PASSED SUCCESSFULLY! (100% Pass Rate)
-```
+### Test Coverage (26 Tests, 100% Pass Rate):
+- **`AuthServiceTest` (5 tests)**: Password hashing consistency, valid login, invalid password rejection, unknown user rejection, role permissions.
+- **`StudentServiceTest` (6 tests)**: Student creation, retrieval, duplicate rejection, academic record updates, searching, deletion.
+- **`AnalyticsEngineTest` (5 tests)**: Low risk evaluation, high risk evaluation, attendance deficiency detection, cohort averages, grade histogram buckets.
+- **`InterventionServiceTest` (3 tests)**: Remedial coaching strategy generation, attendance advisory strategy generation, lifecycle status transitions.
+- **`InputValidationAndSecurityTest` (6 tests)**: Negative mark rejection, mark $>50$ rejection, attendance bounds (0–100%), negative backlogs/study hours rejection, role capability segregation, registration regex validation.
+- **`CsvHandlerTest` (1 test)**: Bidirectional file serialization roundtrip.
 
 ---
 
-## 6. Terminal Execution Preview
+## 16. Sample Input and Output
 
-### 6.1 Enrolled Student Directory & Risk Assessment
-```
-+-----------+---------------------+--------------------------------+-----+------+------------+---------------+------------+
-|  Reg No   |        Name         |           Department           | Sem | CGPA | Attendance | Composite/100 | Risk Level |
-+-----------+---------------------+--------------------------------+-----+------+------------+---------------+------------+
-| 23BCE1001 | Aarav Sharma        | Computer Science & Engineering | 5   | 8.85 | 94.5%      | 92.0          | LOW        |
-| 23BCE1003 | Rohan Verma         | Computer Science & Engineering | 5   | 6.40 | 62.0%      | 47.0          | HIGH       |
-| 23BCE1005 | Vikram Malhotra     | Computer Science & Engineering | 5   | 5.75 | 54.0%      | 36.3          | HIGH       |
-| 23BCE1007 | Kabir Mehta         | Information Technology         | 5   | 6.80 | 72.0%      | 57.8          | MODERATE   |
-| 23BCE1009 | Aditya Deshmukh     | Computer Science & Engineering | 5   | 5.20 | 48.5%      | 31.4          | HIGH       |
-+-----------+---------------------+--------------------------------+-----+------+------------+---------------+------------+
-```
+### Sample Input:
+- **Student Profile**: Reg No: `23BCE1025`, Name: `Rahul Sen`, Email: `rahul.sen2023@vitstudent.ac.in`, Branch: `CSE`, Semester: `5`, CGPA: `5.40`.
+- **Continuous Assessment Marks**: Internal Test 1: `16.0 / 50`, Internal Test 2: `14.5 / 50`, Assignment: `8.5 / 20`, Lab: `12.0 / 30`, Quiz: `6.0 / 20`, Attendance: `52.0%`, Study Hours: `3.5 hrs/wk`, Backlogs: `3`.
 
-### 6.2 Cohort Analytics & ASCII Distribution Histograms
-```
-COHORT ACADEMIC RISK BREAKDOWN
---------------------------------------------------
- High Risk (Urgent) | █████████████ 5
- Moderate Risk      | ████████ 3
- Low Risk (Stable)  | ██████████████████████████████ 12
---------------------------------------------------
-CONTINUOUS ASSESSMENT GRADE HISTOGRAM
---------------------------------------------------
- S (>=90)  | ████████████████████████ 4
- A (80-89) | ████████████ 2
- B (70-79) | ████████████████████████ 4
- C (60-69) | ██████████████████ 3
- D (50-59) | ████████████ 2
- F (<50)   | ██████████████████████████████ 5
---------------------------------------------------
-```
+### Sample Output:
+- **Normalized Composite Score**: `34.1 / 100.0`
+- **Risk Classification**: `HIGH RISK`
+- **Failure Probability**: `95.4%` (via Sigmoid risk calculation)
+- **Primary Risk Drivers**:
+  - `Attendance shortage: 52.0% (< 75.0% statutory threshold)`
+  - `Internal Test 1 deficit: 16.0/50 marks`
+  - `Internal Test 2 deficit: 14.5/50 marks`
+  - `3 active arrears/backlogs`
+  - `Low self-study allocation: 3.5 hrs/week (< 6.0 hrs/week)`
+- **Generated Interventions**:
+  - `[INT-1022] Mandatory Remedial Classes in CSE2001 (Remedial Coaching & Doubt Clearing)`
+  - `[INT-1023] Urgent Attendance Advisory & Parental Notification (Attendance Shortage Counseling)`
+  - `[INT-1024] Peer Mentorship & Collaborative Learning Circle (Peer Tutoring & Study Group Pairing)`
 
 ---
 
-## 7. Project Structure
+## 17. Screenshots & Terminal Captures
 
-```
-.
-├── compile.bat / compile.sh       # One-click compile scripts
-├── run.bat / run.sh               # One-click CLI launch scripts
-├── test.bat / test.sh             # One-click automated test runner
-├── pom.xml                        # Standard Maven configuration
-├── .gitignore                     # Java Git configuration
-├── statement.md                   # Problem Statement & Scope (Section 5.2)
-├── README.md                      # Evaluator Setup & Usage Guide (Section 5.1)
-├── data/
-│   ├── students_seed.csv          # Initial seed dataset with 20 student profiles
-│   └── students_db.csv           # Persistent working database file
-├── docs/
-│   ├── design_artefacts.md        # Architecture, Workflows, UML Class, Sequence, ER
-│   └── PROJECT_REPORT.md          # Complete 15-section project report (Section 6)
-├── src/
-│   └── com/
-│       └── edutrack/
-│           ├── EduTrackApp.java   # Main CLI entrypoint
-│           ├── model/             # Domain entities (User, Student, AcademicRecord, etc.)
-│           ├── repository/        # DAO interfaces & file implementations
-│           ├── service/           # Business services (Auth, Student, Analytics, Intervention)
-│           ├── strategy/          # GoF Strategy pattern implementations
-│           ├── exception/         # Custom exception hierarchy
-│           ├── util/              # Terminal formatting, ANSI, CSV, ASCII charts
-│           └── cli/               # CLI controller, menus, input validators
-└── test/
-    └── com/
-        └── edutrack/
-            ├── TestRunner.java    # Automated test execution engine
-            ├── AuthServiceTest.java
-            ├── StudentServiceTest.java
-            ├── AnalyticsEngineTest.java
-            ├── InterventionServiceTest.java
-            └── CsvHandlerTest.java
-```
+Representative terminal outputs and capture instructions for evaluation are documented in:
+👉 [`docs/screenshots/README.md`](docs/screenshots/README.md)
+
+Outputs include:
+1. System Login Screen with role credentials.
+2. Main Navigation Menu.
+3. Enrolled Student Directory Table.
+4. Detailed Student Dossier & Risk Gauge.
+5. Cohort Analytics & ASCII Grade Histograms.
+6. Early Warning Risk Alert Roster.
+7. Strategy-Driven Intervention Management.
+8. Automated Unit Test Runner (26/26 Passed).
 
 ---
 
-## 8. Official Submission Guidelines Compliance
+## 18. Challenges Faced
 
-- **Course Relevance**: Directly implements concepts from **Object Oriented Programming using Java (CSE1007)** (Inheritance, Polymorphism, Encapsulation, Abstraction, Strategy Pattern, Custom Exceptions, Collections, Streams, File I/O).
-- **Executable via Terminal**: Submissions requiring GUI setups are penalized. EduTrack is 100% executable from any terminal without GUI components.
-- **Repository Visibility**: Repository must be set to **Public** before portal submission.
-- **Submission URL Format**: Strict root URL: `https://github.com/sandeepkumargupta1/edutrack-academic-analytics` (Never submit a `/tree/main/` URL).
+1. **Terminal Character Encoding & ANSI Formatting**: Windows Command Prompt historically defaulted to code page 437. Resolved by enforcing `-Dfile.encoding=UTF-8` and providing clean fallback padding in `TableRenderer`.
+2. **Zero-Dependency Automated Testing**: Modern Java testing relies on JUnit 5 jars requiring Maven downloads. To eliminate build failures on offline evaluation systems, a custom reflection-based `TestRunner` was engineered into the codebase.
+3. **Multi-Factor Risk Modeling**: Balancing attendance deficiency against test marks. Resolved by implementing an institutional threshold penalty that overrides raw scores when attendance falls below 60%.
+
+---
+
+## 19. Future Enhancements
+
+1. **JDBC Database Connector**: Optional PostgreSQL/MySQL storage driver implementing `StudentRepository`.
+2. **Automated Notification Service**: JavaMail API integration to dispatch automated email advisories to faculty proctors and parents.
+3. **Multi-Semester Longitudinal Analytics**: Tracking historical score progression across multiple academic semesters.
+
+---
+
+## 20. References
+
+1. Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design Patterns: Elements of Reusable Object-Oriented Software*. Addison-Wesley.
+2. Bloch, J. (2018). *Effective Java* (3rd ed.). Addison-Wesley Professional.
+3. Oracle Corporation. (2024). *Java Platform, Standard Edition Documentation (Java SE 17 & 21)*.
+4. Vellore Institute of Technology. *Academic Regulations and Examination Guidelines for Continuous Assessment (CAT-1, CAT-2, FAT)*.

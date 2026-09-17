@@ -1,0 +1,57 @@
+graph TD
+    subgraph Presentation Layer [Presentation Layer: CLI & Terminal Interface]
+        CLI[CliController]
+        MENU[MenuOption & InputValidator]
+        RENDER[TableRenderer & AsciiChartRenderer]
+        CLI --> MENU
+        CLI --> RENDER
+    end
+
+    subgraph Service Layer [Service / Business Logic Layer]
+        AUTH[AuthService]
+        STUDENT_SVC[StudentService]
+        ANALYTICS[AnalyticsEngine]
+        INTERVENTION_SVC[InterventionService]
+    end
+
+    subgraph Strategy Layer [Behavioral Strategy Layer - GoF Pattern]
+        STRAT[InterventionStrategy Interface]
+        REM[RemedialClassStrategy]
+        ATT[AttendanceCounselingStrategy]
+        PEER[PeerTutoringStrategy]
+        STRAT --> REM
+        STRAT --> ATT
+        STRAT --> PEER
+    end
+
+    subgraph Domain Layer [Domain Models & Entities]
+        USER[User / FacultyUser / StudentUser / AdminUser]
+        STUDENT[Student Aggregate Entity]
+        RECORD[AcademicRecord]
+        ASSESSMENT[RiskAssessment]
+        INTERVENT[Intervention]
+    end
+
+    subgraph Persistence Layer [Data Access & Storage Layer]
+        REPO[StudentRepository Interface]
+        INMEM[InMemoryStudentRepository]
+        FILE_REPO[FileStudentRepository]
+        CSV[CsvHandler Utility]
+        STORAGE[(students_db.csv / students_seed.csv)]
+
+        REPO --> INMEM
+        INMEM --> FILE_REPO
+        FILE_REPO --> CSV
+        CSV --> STORAGE
+    end
+
+    CLI --> AUTH
+    CLI --> STUDENT_SVC
+    CLI --> ANALYTICS
+    CLI --> INTERVENTION_SVC
+
+    STUDENT_SVC --> REPO
+    INTERVENTION_SVC --> STRAT
+    INTERVENTION_SVC --> Domain Layer
+    ANALYTICS --> Domain Layer
+    STUDENT_SVC --> Domain Layer

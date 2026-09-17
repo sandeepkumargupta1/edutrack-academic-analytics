@@ -1,0 +1,88 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam activity {
+    StartColor #22C55E
+    EndColor #EF4444
+    BackgroundColor #F8FAFC
+    BorderColor #334155
+}
+
+title EduTrack Operational Workflow Diagram
+
+start
+:Initialize EduTrack Application;
+:Check Command Line Arguments;
+
+if (Flag contains --report?) then (yes)
+    :Execute Headless Audit;
+    :Load Student Data from CSV;
+    :Calculate Cohort Analytics;
+    :Execute Risk Assessment Algorithm;
+    :Trigger Automated Interventions;
+    :Output ASCII Tables, Charts & Alerts to stdout;
+    stop
+else (no)
+    repeat
+        :Prompt User Credentials;
+        :AuthService verifies Username & SHA-256 Hash;
+    backward:Display Authentication Error;
+    repeat while (Credentials Valid?) is (no)
+    ->yes;
+
+    :Determine User Role (Faculty / Admin / Student);
+    
+    repeat
+        :Display Interactive Main Menu;
+        :Read and Validate User Selection;
+
+        switch (Selection)
+        case ( 1: View Students )
+            :Fetch students from StudentRepository;
+            :TableRenderer displays formatted ASCII table;
+        case ( 2: Search Student )
+            :Prompt search query;
+            :Filter records by Reg No, Name, or Branch;
+            :Display matching records;
+        case ( 3: Detailed Profile )
+            :Prompt Registration Number;
+            :Display Marks, Risk Factors, and Assigned Interventions;
+        case ( 4: Add Student )
+            :Validate Reg No format and Email regex;
+            :Check for duplicate primary key;
+            :Save student and flush to students_db.csv;
+        case ( 5: Update Marks )
+            :Prompt IT1, IT2, Lab, Quiz, Attendance;
+            :Enforce boundary constraints (0-50, 0-100%);
+            :Recalculate composite continuous assessment;
+            :AnalyticsEngine re-evaluates risk level;
+            :Flush updated record to CSV;
+        case ( 6: Cohort Analytics )
+            :Compute averages (CGPA, Attendance, Composite);
+            :AsciiChartRenderer builds Grade Histogram;
+            :AsciiChartRenderer builds Risk Breakdown Bar Chart;
+        case ( 7: Early Risk Alert )
+            :Identify students with Failure Probability >= 35%;
+            :Display Alert Table with primary causal drivers;
+        case ( 8: Trigger Interventions )
+            :InterventionService iterates registered strategies;
+            :RemedialClassStrategy flags internal deficits;
+            :AttendanceCounselingStrategy flags < 75% attendance;
+            :PeerTutoringStrategy flags backlog arrears;
+            :Attach new intervention plans to student entities;
+        case ( 9: Manage Interventions )
+            :Display assigned intervention roster;
+            :Update status to IN_PROGRESS or RESOLVED;
+            :Record faculty proctor meeting notes;
+        case ( 10: Export CSV )
+            :Export full cohort data to timestamped CSV file;
+        case ( 11: Logout )
+            :Reset user session;
+        case ( 0: Exit )
+            :Display goodbye message;
+            stop
+        endswitch
+    repeat while (User chooses to continue?) is (yes)
+    ->no;
+    stop
+endif
+@enduml

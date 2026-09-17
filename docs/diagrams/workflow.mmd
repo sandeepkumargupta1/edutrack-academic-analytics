@@ -1,0 +1,25 @@
+flowchart TD
+    START([System Startup]) --> CHECK_MODE{Execution Flag?}
+    CHECK_MODE -- "--report / --batch" --> HEADLESS[Execute Headless Audit & Analysis]
+    HEADLESS --> DISPLAY_ALL[Print Student Tables, Charts, Risk Alerts]
+    DISPLAY_ALL --> TERMINATE([Exit Code 0])
+
+    CHECK_MODE -- "Interactive Mode" --> LOGIN[/Prompt Username & Password/]
+    LOGIN --> AUTH_VERIFY{AuthService.login: Verify SHA-256}
+    AUTH_VERIFY -- Invalid --> ERR_MSG[Display Error & Retry] --> LOGIN
+    AUTH_VERIFY -- Valid --> ROLE_CHECK{Check UserRole}
+    
+    ROLE_CHECK --> MENU[/Render Role-Specific Main Menu/]
+    
+    MENU --> OP_VIEW[1. View Students] --> FETCH_ALL[Fetch from StudentRepository] --> RENDER_TBL[Render Bordered ASCII Table] --> MENU
+    MENU --> OP_SEARCH[2. Search Student] --> FILTER_KW[Filter by RegNo / Name / Dept] --> RENDER_TBL
+    MENU --> OP_PROFILE[3. Detailed Dossier] --> GET_STD[Fetch Student Dossier] --> RENDER_DOSSIER[Display Marks, Risk Drivers & Interventions] --> MENU
+    MENU --> OP_ADD[4. Register Student] --> VAL_INP[InputValidator: Regex & Bounds] --> SAVE_STD[StudentService.createStudent] --> FLUSH_CSV[Auto-Flush to students_db.csv] --> MENU
+    MENU --> OP_MARKS[5. Update Marks] --> PROMPT_MARKS[Prompt IT1, IT2, Lab, Quiz, Att.] --> RECALC_COMP[Recalculate Composite Score & Att. Deficit] --> RUN_EVAL[AnalyticsEngine.assessStudentRisk] --> FLUSH_CSV
+    MENU --> OP_ANALYTICS[6. Cohort Analytics] --> CALC_AVG[Compute Average CGPA, Att., Score] --> RENDER_CHARTS[AsciiChartRenderer: Histograms & Risk Bar Chart] --> MENU
+    MENU --> OP_RISK[7. Early Risk Detection] --> RUN_COHORT[AnalyticsEngine.runCohortRiskAssessment] --> FILTER_RISK[Filter High & Moderate Risk Students] --> RENDER_ALERT_ROSTER[Display Alert Table with Failure Probability] --> MENU
+    MENU --> OP_INTERVENT[8. Trigger Interventions] --> EVAL_STRAT[InterventionService: Evaluate Strategies] --> GEN_PLANS[Instantiate Remedial, Attendance, Peer Tutoring Plans] --> MENU
+    MENU --> OP_MANAGE[9. Manage Interventions] --> LIST_INT[List Active Plans] --> UPDATE_ST[Update Status: In Progress / Resolved] --> MENU
+    MENU --> OP_EXPORT[10. Export CSV] --> WRITE_EXPORT[CsvHandler: Write Timestamped File] --> MENU
+    MENU --> OP_LOGOUT[11. Logout] --> LOGOUT_ACT[AuthService.logout] --> LOGIN
+    MENU --> OP_EXIT[0. Exit] --> EXIT_MSG[Display Exit Message] --> TERMINATE

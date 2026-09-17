@@ -48,6 +48,7 @@ public class TestRunner {
         testClasses.add(com.edutrack.service.StudentServiceTest.class);
         testClasses.add(com.edutrack.service.AnalyticsEngineTest.class);
         testClasses.add(com.edutrack.service.InterventionServiceTest.class);
+        testClasses.add(com.edutrack.service.InputValidationAndSecurityTest.class);
         testClasses.add(com.edutrack.util.CsvHandlerTest.class);
 
         int totalTests = 0;

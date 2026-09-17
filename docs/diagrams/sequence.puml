@@ -1,0 +1,67 @@
+@startuml
+autonumber
+skinparam backgroundColor #FFFFFF
+skinparam sequenceMessageAlign center
+
+actor "Faculty User" as Faculty
+boundary "CliController" as CLI
+control "AuthService" as Auth
+control "StudentService" as Svc
+entity "FileStudentRepository" as Repo
+control "AnalyticsEngine" as Engine
+control "InterventionService" as IntSvc
+entity "InterventionStrategy" as Strat
+
+== Phase 1: Authentication & RBAC ==
+Faculty -> CLI: Enter credentials ("faculty", "admin123")
+activate CLI
+CLI -> Auth: login("faculty", "admin123")
+activate Auth
+Auth -> Auth: hashPassword("admin123")
+Auth --> CLI: return FacultyUser
+deactivate Auth
+
+== Phase 2: Assessment Recording & CSV Persistence ==
+Faculty -> CLI: Option 5: Update Marks (IT1=18, IT2=16, Att=58%)
+CLI -> Svc: updateAcademicRecord("23BCE1015", record)
+activate Svc
+Svc -> Repo: findByRegNumber("23BCE1015")
+activate Repo
+Repo --> Svc: Student entity
+Svc -> Svc: student.setAcademicRecord(record)
+Svc -> Repo: save(student)
+Repo -> Repo: flush() -> CsvHandler.saveStudents()
+Repo --> Svc: updated Student
+deactivate Repo
+Svc --> CLI: void
+deactivate Svc
+
+== Phase 3: Analytical Risk Scoring & Risk Factor Attribution ==
+CLI -> Engine: assessStudentRisk(student)
+activate Engine
+Engine -> Engine: calculateCompositeScore()
+Engine -> Engine: evaluateAttendancePenalty()
+Engine -> Engine: computeFailureProbability()
+Engine --> CLI: RiskAssessment (HIGH, 83.9% failure prob)
+deactivate Engine
+
+== Phase 4: Strategy-Driven Intervention Generation ==
+CLI -> IntSvc: generateInterventionsForStudent(student)
+activate IntSvc
+loop For each strategy
+    IntSvc -> Strat: isApplicable(student)
+    activate Strat
+    Strat --> IntSvc: true (deficiency detected)
+    IntSvc -> Strat: createIntervention(student, "INT-1008")
+    Strat --> IntSvc: Intervention instance
+    deactivate Strat
+    IntSvc -> Svc: student.addIntervention(intervention)
+end
+IntSvc --> CLI: List<Intervention>
+deactivate IntSvc
+
+== Phase 5: Terminal Output Presentation ==
+CLI --> Faculty: TableRenderer & AsciiChartRenderer display results
+deactivate CLI
+
+@enduml
