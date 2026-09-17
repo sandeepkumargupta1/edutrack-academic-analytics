@@ -76,4 +76,38 @@ public class StudentServiceTest {
         }
         Assertion.assertTrue(caught, "Fetching non-existent student must throw StudentNotFoundException");
     }
+
+    public void testInvalidStudentDataThrowsException() {
+        StudentService service = new StudentService(new InMemoryStudentRepository());
+        boolean caught = false;
+        try {
+            // Malformed registration number
+            service.createStudent("INVALID_REG", "Test", "t@vit.ac.in", "CSE", 5, 8.0, "Dr. Guide");
+        } catch (com.edutrack.exception.InvalidStudentDataException e) {
+            caught = true;
+        } catch (Exception e) {
+            caught = false;
+        }
+        Assertion.assertTrue(caught, "Malformed registration number must throw InvalidStudentDataException");
+    }
+
+    public void testOverloadedCreateAndSearch() throws Exception {
+        StudentService service = new StudentService(new InMemoryStudentRepository());
+        // Test overloaded createStudent without explicit mentor
+        Student s = service.createStudent("23BCE3001", "Overload Test", "overload@vit.ac.in", "CSE", 6, 8.2);
+        Assertion.assertEquals("Faculty Advisor", s.getMentorName(), "Default mentor should be Faculty Advisor");
+
+        service.createStudent("23BCE3002", "ECE Student", "ece@vit.ac.in", "ECE", 6, 7.9);
+        service.createStudent("23BCE3003", "Junior Student", "junior@vit.ac.in", "CSE", 3, 8.5);
+
+        // Test overloaded search by semester
+        List<Student> sem6 = service.searchStudents(6);
+        Assertion.assertEquals(2, sem6.size(), "Semester 6 search should return 2 students");
+
+        // Test overloaded search by department and semester
+        List<Student> cseSem6 = service.searchStudents("CSE", 6);
+        Assertion.assertEquals(1, cseSem6.size(), "CSE Semester 6 search should return 1 student");
+        Assertion.assertEquals("23BCE3001", cseSem6.get(0).getRegNumber(), "Reg number should match");
+    }
 }
+

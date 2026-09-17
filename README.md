@@ -301,15 +301,16 @@ test.bat
 ./test.sh
 ```
 
-### Test Coverage (26 Tests, 100% Pass Rate):
+### Test Coverage (31 Tests, 100% Pass Rate):
 - **`AuthServiceTest` (5 tests)**: Password hashing consistency, valid login, invalid password rejection, unknown user rejection, role permissions.
-- **`StudentServiceTest` (6 tests)**: Student creation, retrieval, duplicate rejection, academic record updates, searching, deletion.
-- **`AnalyticsEngineTest` (5 tests)**: Low risk evaluation, high risk evaluation, attendance deficiency detection, cohort averages, grade histogram buckets.
+- **`StudentServiceTest` (8 tests)**: Student creation, retrieval, duplicate rejection, academic record updates, searching, deletion, custom exceptions (`InvalidStudentDataException`), method overloading (`createStudent`, `searchStudents`).
+- **`AnalyticsEngineTest` (6 tests)**: Low risk evaluation, high risk evaluation, attendance deficiency detection, cohort averages, grade histogram buckets, simulation method overloading.
 - **`InterventionServiceTest` (3 tests)**: Remedial coaching strategy generation, attendance advisory strategy generation, lifecycle status transitions.
-- **`InputValidationAndSecurityTest` (6 tests)**: Negative mark rejection, mark $>50$ rejection, attendance bounds (0–100%), negative backlogs/study hours rejection, role capability segregation, registration regex validation.
+- **`InputValidationAndSecurityTest` (8 tests)**: Negative mark rejection, mark $>50$ rejection, attendance bounds (0–100%), negative backlogs/study hours rejection, role capability segregation, registration regex validation, custom exceptions (`InvalidMarksException`), table renderer title overload.
 - **`CsvHandlerTest` (1 test)**: Bidirectional file serialization roundtrip.
 
-👉 *For the complete 26-test verification log, defect resolutions, and 30-run stability audit, see [`docs/testing.md`](docs/testing.md).*
+👉 *For the complete 31-test verification log, defect resolutions, and 30-run stability audit, see [`docs/testing.md`](docs/testing.md).*
+
 
 ---
 

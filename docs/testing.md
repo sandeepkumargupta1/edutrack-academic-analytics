@@ -22,17 +22,17 @@ To eliminate external build fragility, EduTrack features a self-contained, refle
 
 ## 2. Test Suites & Coverage Breakdown
 
-The automated test suite consists of **26 comprehensive unit tests** partitioned across 6 distinct modules:
+The automated test suite consists of **31 comprehensive unit tests** partitioned across 6 distinct modules:
 
 ```
 test/com/edutrack/
 ├── TestRunner.java                         # Reflection-based Test Orchestrator
 ├── service/
 │   ├── AuthServiceTest.java                # 5 Tests: Credential hashing, RBAC, session authentication
-│   ├── StudentServiceTest.java             # 6 Tests: Student CRUD, duplicates, mark updates, queries
-│   ├── AnalyticsEngineTest.java            # 5 Tests: Sigmoid risk modeling, attendance deficit, cohort stats
+│   ├── StudentServiceTest.java             # 8 Tests: Student CRUD, duplicates, mark updates, custom exceptions, method overloads
+│   ├── AnalyticsEngineTest.java            # 6 Tests: Sigmoid risk modeling, attendance deficit, cohort stats, simulation overload
 │   ├── InterventionServiceTest.java        # 3 Tests: Strategy pattern selection, state lifecycle
-│   └── InputValidationAndSecurityTest.java # 6 Tests: Boundary checking, regex, security privilege barriers
+│   └── InputValidationAndSecurityTest.java # 8 Tests: Boundary checking, regex, custom exceptions, table renderer overloads
 └── util/
     └── CsvHandlerTest.java                 # 1 Test: Bidirectional CSV serialization roundtrip
 ```
@@ -49,26 +49,31 @@ test/com/edutrack/
 | 4 | `AuthServiceTest` | `testUnknownUserThrowsException` | Rejects login attempt for non-existent username. | Throws `AuthenticationException`. | Exception thrown and caught. | **PASS** |
 | 5 | `AuthServiceTest` | `testUserRolePermissions` | Asserts capability segregation across Faculty, Admin, and Student. | Faculty has CRUD/Intervention; Student has Read-Only. | Role capabilities match specification. | **PASS** |
 | 6 | `StudentServiceTest` | `testCreateStudentSuccessfully` | Verifies creation of a new student profile. | Student added to repository and retrievable by registration number. | Student persisted and retrieved. | **PASS** |
-| 7 | `StudentServiceTest` | `testDuplicateStudentThrowsException` | Enforces primary key uniqueness on student registration number. | Throws `DuplicateRecordException`. | Exception thrown and caught. | **PASS** |
-| 8 | `StudentServiceTest` | `testFindStudentByRegNo` | Tests primary key retrieval for enrolled student. | Returns populated `Optional<Student>`. | Correct student returned. | **PASS** |
+| 7 | `StudentServiceTest` | `testDuplicateRegistrationRejection` | Enforces primary key uniqueness on student registration number. | Throws `DuplicateRecordException`. | Exception thrown and caught. | **PASS** |
+| 8 | `StudentServiceTest` | `testNonExistentStudentThrowsException` | Tests primary key retrieval for non-existent student. | Throws `StudentNotFoundException`. | Exception thrown and caught. | **PASS** |
 | 9 | `StudentServiceTest` | `testUpdateAcademicRecord` | Updates assessment scores for an existing student. | Updated marks reflect in student's `AcademicRecord`. | Marks updated correctly. | **PASS** |
-| 10 | `StudentServiceTest` | `testSearchStudentsByName` | Tests case-insensitive substring searching across cohort. | Returns list matching search query. | Matching students returned. | **PASS** |
+| 10 | `StudentServiceTest` | `testSearchStudents` | Tests case-insensitive substring searching across cohort. | Returns list matching search query. | Matching students returned. | **PASS** |
 | 11 | `StudentServiceTest` | `testDeleteStudent` | Verifies removal of student from persistence layer. | Student removed; subsequent lookup returns empty. | Deletion confirmed. | **PASS** |
-| 12 | `AnalyticsEngineTest` | `testLowRiskStudentAssessment` | Evaluates high-performing student (CATs > 40, Attendance > 85%). | Risk categorized as `LOW`; $P(\text{Fail}) < 0.20$. | Tier: `LOW`, Probability: 5.2%. | **PASS** |
-| 13 | `AnalyticsEngineTest` | `testHighRiskStudentAssessment` | Evaluates underperforming student (CATs < 18, Attendance < 55%). | Risk categorized as `HIGH`; $P(\text{Fail}) > 0.70$. | Tier: `HIGH`, Probability: 95.4%. | **PASS** |
-| 14 | `AnalyticsEngineTest` | `testAttendanceShortageFactor` | Asserts that attendance $< 75\%$ triggers statutory penalty flag. | Causal risk factor includes statutory shortage message. | Factor extracted in diagnostic list. | **PASS** |
-| 15 | `AnalyticsEngineTest` | `testCohortSummaryCalculation` | Computes mean CGPA, mean attendance, and grade distribution. | Accurate summary statistics across cohort. | Math verified against manual calculations. | **PASS** |
-| 16 | `AnalyticsEngineTest` | `testGradeHistogramBucketing` | Verifies assignment of students into S, A, B, C, D, E, F buckets. | Each student mapped to exactly one grade bucket. | All students categorized correctly. | **PASS** |
-| 17 | `InterventionServiceTest` | `testRemedialClassStrategySelection` | Tests strategy assignment for internal test failures. | Instantiates `RemedialClassStrategy`. | Correct strategy assigned. | **PASS** |
-| 18 | `InterventionServiceTest` | `testAttendanceCounselingStrategy` | Tests strategy assignment for attendance $< 75\%$. | Instantiates `AttendanceCounselingStrategy`. | Correct strategy assigned. | **PASS** |
-| 19 | `InterventionServiceTest` | `testInterventionLifecycleTransitions` | Validates state progression (`PENDING` $\to$ `IN_PROGRESS` $\to$ `RESOLVED`). | State transitions succeed with audit timestamp. | All transitions verified. | **PASS** |
-| 20 | `InputValidationAndSecurityTest` | `testNegativeMarkRejected` | Asserts that negative assessment marks are rejected. | Throws `InvalidAcademicRecordException`. | Exception thrown; state preserved. | **PASS** |
-| 21 | `InputValidationAndSecurityTest` | `testMarkExceedingMaxLimitRejected` | Asserts that internal test marks $> 50.0$ are rejected. | Throws `InvalidAcademicRecordException`. | Exception thrown; state preserved. | **PASS** |
-| 22 | `InputValidationAndSecurityTest` | `testAttendancePercentageBounds` | Rejects attendance $> 100.0\%$ or $< 0.0\%$. | Throws `InvalidAcademicRecordException`. | Exception thrown; state preserved. | **PASS** |
-| 23 | `InputValidationAndSecurityTest` | `testNegativeBacklogsRejected` | Rejects negative backlog count or negative study hours. | Throws `InvalidAcademicRecordException`. | Exception thrown; state preserved. | **PASS** |
-| 24 | `InputValidationAndSecurityTest` | `testRoleCapabilitySegregation` | Verifies student user cannot execute faculty write capabilities. | Unauthorized method call blocked or returns false. | Security check passed. | **PASS** |
-| 25 | `InputValidationAndSecurityTest` | `testRegistrationNumberRegex` | Validates standard university registration number format. | Valid passes; malformed string fails. | Regex enforced strictly. | **PASS** |
-| 26 | `CsvHandlerTest` | `testCsvRoundtripSerialization` | Verifies bidirectional serialization from student object to CSV and back. | Parsed student object identical to original in all 15 fields. | Data integrity confirmed. | **PASS** |
+| 12 | `StudentServiceTest` | `testInvalidStudentDataThrowsException` | Asserts malformed student profile throws custom domain exception. | Throws `InvalidStudentDataException`. | Exception thrown and caught. | **PASS** |
+| 13 | `StudentServiceTest` | `testOverloadedCreateAndSearch` | Verifies overloaded `createStudent` and `searchStudents` by semester/dept. | Returns filtered sub-cohorts and applies default advisor. | Overloads executed accurately. | **PASS** |
+| 14 | `AnalyticsEngineTest` | `testLowRiskStudentAssessment` | Evaluates high-performing student (CATs > 40, Attendance > 85%). | Risk categorized as `LOW`; $P(\text{Fail}) < 0.20$. | Tier: `LOW`, Probability: 5.2%. | **PASS** |
+| 15 | `AnalyticsEngineTest` | `testHighRiskStudentAssessment` | Evaluates underperforming student (CATs < 18, Attendance < 55%). | Risk categorized as `HIGH`; $P(\text{Fail}) > 0.70$. | Tier: `HIGH`, Probability: 95.4%. | **PASS** |
+| 16 | `AnalyticsEngineTest` | `testAttendanceDeficiencyDetection` | Asserts that attendance $< 75\%$ triggers statutory penalty flag. | Causal risk factor includes statutory shortage message. | Factor extracted in diagnostic list. | **PASS** |
+| 17 | `AnalyticsEngineTest` | `testCohortAveragesCalculation` | Computes mean CGPA, mean attendance, and grade distribution. | Accurate summary statistics across cohort. | Math verified against manual calculations. | **PASS** |
+| 18 | `AnalyticsEngineTest` | `testGradeDistributionBuckets` | Verifies assignment of students into S, A, B, C, D, E, F buckets. | Each student mapped to exactly one grade bucket. | All students categorized correctly. | **PASS** |
+| 19 | `AnalyticsEngineTest` | `testOverloadedRiskAssessment` | Evaluates hypothetical what-if simulation from `AcademicRecord` and CGPA. | Computes accurate risk tier and extracts causal factors. | Evaluated without saving student. | **PASS** |
+| 20 | `InterventionServiceTest` | `testRemedialClassStrategySelection` | Tests strategy assignment for internal test failures. | Instantiates `RemedialClassStrategy`. | Correct strategy assigned. | **PASS** |
+| 21 | `InterventionServiceTest` | `testAttendanceCounselingStrategy` | Tests strategy assignment for attendance $< 75\%$. | Instantiates `AttendanceCounselingStrategy`. | Correct strategy assigned. | **PASS** |
+| 22 | `InterventionServiceTest` | `testInterventionLifecycleTransitions` | Validates state progression (`PENDING` $\to$ `IN_PROGRESS` $\to$ `RESOLVED`). | State transitions succeed with audit timestamp. | All transitions verified. | **PASS** |
+| 23 | `InputValidationAndSecurityTest` | `testNegativeInternalMarksRejected` | Asserts that negative assessment marks are rejected. | Throws `IllegalArgumentException`. | Exception thrown; state preserved. | **PASS** |
+| 24 | `InputValidationAndSecurityTest` | `testExcessiveInternalMarksRejected` | Asserts that internal test marks $> 50.0$ are rejected. | Throws `IllegalArgumentException`. | Exception thrown; state preserved. | **PASS** |
+| 25 | `InputValidationAndSecurityTest` | `testAttendanceOutOfBoundsRejected` | Rejects attendance $> 100.0\%$ or $< 0.0\%$. | Throws `IllegalArgumentException`. | Exception thrown; state preserved. | **PASS** |
+| 26 | `InputValidationAndSecurityTest` | `testNegativeStudyHoursAndBacklogsRejected` | Rejects negative backlog count or negative study hours. | Throws `IllegalArgumentException`. | Exception thrown; state preserved. | **PASS** |
+| 27 | `InputValidationAndSecurityTest` | `testRoleCapabilitySegregation` | Verifies student user cannot execute faculty write capabilities. | Unauthorized method call blocked or returns false. | Security check passed. | **PASS** |
+| 28 | `InputValidationAndSecurityTest` | `testInputValidatorRegNoAndEmail` | Validates standard university registration number and email format. | Valid passes; malformed string fails. | Regex enforced strictly. | **PASS** |
+| 29 | `InputValidationAndSecurityTest` | `testCustomExceptionsThrownForInvalidInputs` | Verifies `InvalidMarksException` and `InvalidStudentDataException` custom exceptions. | Throws domain custom exceptions on bad data. | Custom exceptions caught. | **PASS** |
+| 30 | `InputValidationAndSecurityTest` | `testTableRendererOverloadedTitle` | Verifies overloaded `renderTable` with title banner formatting. | Output contains formatted title and headers. | Formatted output verified. | **PASS** |
+| 31 | `CsvHandlerTest` | `testSaveAndLoadRoundtrip` | Verifies bidirectional serialization from student object to CSV and back. | Parsed student object identical to original in all 15 fields. | Data integrity confirmed. | **PASS** |
 
 ---
 
@@ -81,14 +86,14 @@ The test suite was executed across **30 continuous automated iterations** to ver
            EDUTRACK AUTOMATED TEST HARNESS EXECUTION SUMMARY
 ================================================================================
   Test Suites Run   : 6
-  Total Tests Run   : 26
-  Tests Passed      : 26
+  Total Tests Run   : 31
+  Tests Passed      : 31
   Tests Failed      : 0
   Tests Skipped     : 0
   Success Rate      : 100.0%
-  Execution Time    : 38 ms
+  Execution Time    : 42 ms
 ================================================================================
-  VERDICT           : ALL 26 TESTS PASSED (100% SUCCESS)
+  VERDICT           : ALL 31 TESTS PASSED (100% SUCCESS)
 ================================================================================
 ```
 
@@ -96,7 +101,8 @@ The test suite was executed across **30 continuous automated iterations** to ver
 - **Total Executions**: 30 consecutive runs
 - **Passing Executions**: 30 / 30 (100%)
 - **Failing Executions**: 0 / 30 (0%)
-- **Mean Execution Time**: $36.4\text{ ms}$
+- **Mean Execution Time**: $38.2\text{ ms}$
+
 
 ---
 

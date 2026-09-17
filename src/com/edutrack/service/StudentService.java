@@ -2,6 +2,7 @@ package com.edutrack.service;
 
 import com.edutrack.exception.DuplicateRecordException;
 import com.edutrack.exception.InvalidAcademicRecordException;
+import com.edutrack.exception.InvalidStudentDataException;
 import com.edutrack.exception.StudentNotFoundException;
 import com.edutrack.model.AcademicRecord;
 import com.edutrack.model.Student;
@@ -34,12 +35,21 @@ public class StudentService {
     }
 
     public Student createStudent(String regNumber, String name, String email, String dept, int sem, double cgpa, String mentor)
-            throws DuplicateRecordException {
+            throws DuplicateRecordException, InvalidStudentDataException {
+        com.edutrack.cli.InputValidator.validateStudentProfile(regNumber, name, email, sem, cgpa);
         if (repository.existsByRegNumber(regNumber)) {
             throw new DuplicateRecordException("Student with registration number " + regNumber + " already exists.");
         }
         Student student = new Student(regNumber, name, email, dept, sem, cgpa, mentor);
         return repository.save(student);
+    }
+
+    /**
+     * Overloaded method to create a student with a default faculty mentor assignment.
+     */
+    public Student createStudent(String regNumber, String name, String email, String dept, int sem, double cgpa)
+            throws DuplicateRecordException, InvalidStudentDataException {
+        return createStudent(regNumber, name, email, dept, sem, cgpa, "Faculty Advisor");
     }
 
     public void updateAcademicRecord(String regNumber, AcademicRecord record)
@@ -71,6 +81,29 @@ public class StudentService {
                         || s.getMentorName().toLowerCase().contains(term))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Overloaded method to filter students by enrolled semester.
+     */
+    public List<Student> searchStudents(int semester) {
+        return repository.findAll().stream()
+                .filter(s -> s.getSemester() == semester)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Overloaded method to filter students by department and enrolled semester.
+     */
+    public List<Student> searchStudents(String department, int semester) {
+        if (department == null || department.trim().isEmpty()) {
+            return searchStudents(semester);
+        }
+        String dept = department.trim();
+        return repository.findAll().stream()
+                .filter(s -> s.getSemester() == semester && s.getDepartment().equalsIgnoreCase(dept))
+                .collect(Collectors.toList());
+    }
+
 
     public int importCsv(File file) throws IOException {
         List<Student> imported = CsvHandler.loadStudents(file);

@@ -108,6 +108,16 @@ public class AnalyticsEngine {
         return assessment;
     }
 
+    /**
+     * Overloaded method to compute risk evaluation directly from an AcademicRecord and CGPA
+     * without requiring a persisted Student entity. Useful for hypothetical what-if simulations.
+     */
+    public RiskAssessment assessStudentRisk(AcademicRecord record, double cgpa) {
+        Student tempStudent = new Student("SIM0001", "Simulation Student", "sim@vit.ac.in", "CSE", 5, cgpa, "Sim Advisor");
+        tempStudent.setAcademicRecord(record);
+        return assessStudentRisk(tempStudent);
+    }
+
     public void runCohortRiskAssessment(List<Student> students) {
         if (students != null) {
             for (Student s : students) {

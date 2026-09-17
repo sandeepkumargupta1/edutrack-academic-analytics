@@ -266,17 +266,13 @@ public class CliController {
             String dept = scanner.nextLine().trim();
             if (dept.isEmpty()) dept = "Computer Science & Engineering";
 
-            System.out.print("Semester (1-10) [5]: ");
-            String semInput = scanner.nextLine().trim();
-            int sem = semInput.isEmpty() ? 5 : Integer.parseInt(semInput);
-
-            System.out.print("CGPA (0.0 - 10.0) [8.0]: ");
-            String cgpaInput = scanner.nextLine().trim();
-            double cgpa = cgpaInput.isEmpty() ? 8.0 : Double.parseDouble(cgpaInput);
+            int sem = promptInt("Semester (1-10)", 5, 1, 10);
+            double cgpa = promptDouble("CGPA (0.0 - 10.0)", 8.0, 0.0, 10.0);
 
             System.out.print("Faculty Mentor [Dr. K. Raman]: ");
             String mentor = scanner.nextLine().trim();
             if (mentor.isEmpty()) mentor = "Dr. K. Raman";
+
 
             Student created = studentService.createStudent(reg, name, email, dept, sem, cgpa, mentor);
             System.out.println(AnsiColor.green("\n[SUCCESS] Registered new student: " + created));

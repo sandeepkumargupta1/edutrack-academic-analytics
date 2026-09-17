@@ -67,4 +67,15 @@ public class AnalyticsEngineTest {
         Assertion.assertEquals(1, grades.get("S (>=90)"), "1 student in S grade bucket");
         Assertion.assertEquals(0, grades.get("F (<50)"), "0 students in F grade bucket");
     }
+
+    public void testOverloadedRiskAssessment() {
+        AnalyticsEngine engine = new AnalyticsEngine();
+        AcademicRecord rec = new AcademicRecord("CSE2001", 12.0, 15.0, 8.0, 10.0, 5.0, 52.0, 2.0, 2);
+        RiskAssessment ra = engine.assessStudentRisk(rec, 5.5);
+        Assertion.assertEquals(RiskLevel.HIGH, ra.getRiskLevel(), "Overloaded risk simulation should identify HIGH risk");
+        Assertion.assertTrue(ra.getFailureProbability() > 0.60, "Failure probability must be high");
+        Assertion.assertTrue(ra.getKeyRiskFactors().stream().anyMatch(f -> f.contains("Attendance shortage")),
+                "Risk factors must include attendance shortage");
+    }
 }
+

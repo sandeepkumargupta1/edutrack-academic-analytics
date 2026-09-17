@@ -99,4 +99,32 @@ public class InputValidationAndSecurityTest {
         Assertion.assertFalse(InputValidator.isValidEmail("invalid-email"), "Malformed email must fail");
         Assertion.assertFalse(InputValidator.isValidEmail(null), "Null email must fail");
     }
+
+    public void testCustomExceptionsThrownForInvalidInputs() {
+        boolean caughtMarks = false;
+        try {
+            InputValidator.validateMarks(-2.0, 30.0, 15.0, 20.0, 15.0);
+        } catch (com.edutrack.exception.InvalidMarksException e) {
+            caughtMarks = true;
+        }
+        Assertion.assertTrue(caughtMarks, "validateMarks must throw InvalidMarksException for negative marks");
+
+        boolean caughtStudentData = false;
+        try {
+            InputValidator.validateStudentProfile("23BCE1001", "", "s@vit.ac.in", 5, 8.0);
+        } catch (com.edutrack.exception.InvalidStudentDataException e) {
+            caughtStudentData = true;
+        }
+        Assertion.assertTrue(caughtStudentData, "validateStudentProfile must throw InvalidStudentDataException for empty name");
+    }
+
+    public void testTableRendererOverloadedTitle() {
+        List<String> headers = java.util.Arrays.asList("Col 1", "Col 2");
+        List<List<String>> rows = java.util.Collections.singletonList(java.util.Arrays.asList("A", "B"));
+        String output = com.edutrack.util.TableRenderer.renderTable("TEST TITLE", headers, rows);
+        Assertion.assertTrue(output.contains("TEST TITLE"), "Output must contain title");
+        Assertion.assertTrue(output.contains("Col 1"), "Output must contain header");
+    }
 }
+
+

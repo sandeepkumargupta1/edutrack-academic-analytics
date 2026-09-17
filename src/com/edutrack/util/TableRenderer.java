@@ -9,6 +9,18 @@ import java.util.List;
  */
 public class TableRenderer {
 
+    /**
+     * Overloaded method to render a bordered ASCII table with a prominent title header.
+     */
+    public static String renderTable(String title, List<String> headers, List<List<String>> rows) {
+        StringBuilder sb = new StringBuilder();
+        if (title != null && !title.trim().isEmpty()) {
+            sb.append("\n").append(title.trim()).append("\n");
+        }
+        sb.append(renderTable(headers, rows));
+        return sb.toString();
+    }
+
     public static String renderTable(List<String> headers, List<List<String>> rows) {
         if (headers == null || headers.isEmpty()) {
             return "";
