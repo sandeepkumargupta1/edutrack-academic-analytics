@@ -19,10 +19,15 @@ This directory contains formal software engineering diagrams, architectural desc
 
 ## 2. Supporting Documents in this Directory
 
-- [`requirements.md`](requirements.md): Dedicated functional requirements (FR-01 to FR-11) and measurable non-functional requirements.
+- [`functional-requirements.md`](functional-requirements.md): Dedicated Functional Requirements specification (FR-01 to FR-11) with exact inputs, processing, outputs, and classes.
+- [`non-functional-requirements.md`](non-functional-requirements.md): Dedicated Non-Functional Requirements (NFR-01 to NFR-06) covering Performance, Security, Reliability, Maintainability, Usability, and Resource Efficiency.
+- [`storage-design.md`](storage-design.md): Storage architecture and data persistence specification for CSV and in-memory collections.
+- [`testing.md`](testing.md): Comprehensive testing report detailing test strategy, 26 unit tests, 100% pass rate over 30 runs, and bug fixes.
+- [`requirements.md`](requirements.md): Consolidated system requirements specification.
 - [`report-outline.md`](report-outline.md): Complete 15-section project report structure aligned with VITyarthi submission format.
 - [`vityarthi-compliance.md`](vityarthi-compliance.md): Formal compliance audit table demonstrating 100% adherence to the evaluation rubric.
 - [`screenshots/README.md`](screenshots/README.md): Detailed terminal transcripts and screenshot capture guidance for evaluation.
 - [`design_artefacts.md`](design_artefacts.md): Technical narrative and embedded Mermaid diagram specifications.
 - [`PROJECT_REPORT.md`](PROJECT_REPORT.md): Complete, ready-to-read academic project report.
 - [`PROJECT_REPORT.pdf`](PROJECT_REPORT.pdf): Pre-compiled print-ready PDF project report.
+

@@ -82,6 +82,8 @@ The system is organized into five major functional modules:
 - ASCII horizontal bar charts for grade distributions and risk breakdowns.
 - Non-interactive headless audit mode (`--report`) for automated CI/CD and grading pipelines.
 
+👉 *For exhaustive specifications of all inputs, processing algorithms, outputs, and relevant classes, see [`docs/functional-requirements.md`](docs/functional-requirements.md).*
+
 ---
 
 ## 7. Non-Functional Requirements
@@ -91,6 +93,9 @@ The system is organized into five major functional modules:
 - **Maintainability**: Strict 5-tier layered architecture separating CLI, Service, Strategy, Domain, and Repository layers.
 - **Reliability & Error Handling**: Graceful recovery from malformed inputs and custom exception hierarchy (`StudentNotFoundException`, `DuplicateRecordException`, `InvalidAcademicRecordException`, `AuthenticationException`).
 - **Usability**: Bordered ASCII tables, color-coded risk badges, and clear navigation prompts.
+- **Resource Efficiency**: Zero external JAR dependencies; resident JVM heap footprint $\le 64\text{ MB}$.
+
+👉 *For complete metrics, verification techniques, and code evidence, see [`docs/non-functional-requirements.md`](docs/non-functional-requirements.md).*
 
 ---
 
@@ -135,6 +140,8 @@ Formal diagram assets are provided in the `docs/` directory:
 - **UML Sequence Diagram**: [`docs/sequence-diagram.png`](docs/sequence-diagram.png) ([Mermaid](docs/diagrams/sequence.mmd) / [PlantUML](docs/diagrams/sequence.puml))
 - **Storage / ER Schema**: [`docs/er-diagram.png`](docs/er-diagram.png) ([Mermaid](docs/diagrams/er.mmd) / [PlantUML](docs/diagrams/er.puml))
 
+👉 *For detailed database specifications, field dictionary, in-memory collection topology, and dirty-write synchronization flow, see [`docs/storage-design.md`](docs/storage-design.md).*
+
 ---
 
 ## 11. Technologies & Tools
@@ -164,7 +171,11 @@ Formal diagram assets are provided in the `docs/` directory:
 │   └── students_db.csv           # Persistent working database file
 ├── docs/
 │   ├── README.md                  # Documentation and diagram index
-│   ├── requirements.md            # Dedicated SRS requirements document
+│   ├── functional-requirements.md # Dedicated FR specification (FR-01 to FR-11)
+│   ├── non-functional-requirements.md # Dedicated NFR specification (NFR-01 to NFR-06)
+│   ├── storage-design.md          # Storage architecture & CSV data dictionary
+│   ├── testing.md                 # Complete test report (26 tests, 30 runs, 100% pass)
+│   ├── requirements.md            # Consolidated system requirements document
 │   ├── report-outline.md          # 15-section project report structure
 │   ├── vityarthi-compliance.md    # Formal compliance audit table
 │   ├── design_artefacts.md        # Technical architecture and diagram source
@@ -297,6 +308,8 @@ test.bat
 - **`InterventionServiceTest` (3 tests)**: Remedial coaching strategy generation, attendance advisory strategy generation, lifecycle status transitions.
 - **`InputValidationAndSecurityTest` (6 tests)**: Negative mark rejection, mark $>50$ rejection, attendance bounds (0–100%), negative backlogs/study hours rejection, role capability segregation, registration regex validation.
 - **`CsvHandlerTest` (1 test)**: Bidirectional file serialization roundtrip.
+
+👉 *For the complete 26-test verification log, defect resolutions, and 30-run stability audit, see [`docs/testing.md`](docs/testing.md).*
 
 ---
 

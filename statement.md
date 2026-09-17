@@ -132,3 +132,15 @@ Without an automated, unified analytical mechanism:
 1. **Single-Node Execution**: EduTrack is designed as a standalone terminal system; it does not currently support distributed multi-node clustering.
 2. **File-Based Storage Concurrency**: Persistence relies on a synchronized flat-file CSV backing an in-memory `ConcurrentHashMap`. While optimal for single-institution course cohorts (up to several thousand records), it does not provide distributed database ACID transactions across concurrent network nodes.
 3. **Command-Line Interface Focus**: EduTrack deliberately avoids graphical windowing toolkits (Swing/JavaFX) and web servers in order to maintain 100% zero-dependency terminal executability for automated academic grading pipelines.
+
+---
+
+## 10. Technical Documentation Cross-References
+
+- **Functional Requirements**: [`docs/functional-requirements.md`](docs/functional-requirements.md) (Detailed specifications FR-01 through FR-11)
+- **Non-Functional Requirements**: [`docs/non-functional-requirements.md`](docs/non-functional-requirements.md) (Performance, Security, Reliability, Maintainability, Usability, Efficiency)
+- **Storage Architecture & Schemas**: [`docs/storage-design.md`](docs/storage-design.md) (CSV data dictionary and in-memory topology)
+- **Verification & Testing Report**: [`docs/testing.md`](docs/testing.md) (Automated test harness, 26 unit tests, 100% pass rate)
+- **VITyarthi Compliance Audit**: [`docs/vityarthi-compliance.md`](docs/vityarthi-compliance.md) (17-point compliance checklist)
+- **System Architecture & UML**: [`docs/README.md`](docs/README.md) (Full diagrams and image assets)
+
