@@ -1,0 +1,21 @@
+reg_number,name,email,department,semester,cgpa,mentor_name,course_code,internal_test_1,internal_test_2,assignment_score,lab_score,quiz_score,attendance_percentage,study_hours_per_week,backlogs_count
+23BCE1001,Aarav Sharma,aarav.sharma2023@vitstudent.ac.in,Computer Science & Engineering,5,8.85,Dr. K. Raman,CSE2001,44.5,46.0,18.5,28.0,19.0,94.5,18.0,0
+23BCE1002,Diya Patel,diya.patel2023@vitstudent.ac.in,Computer Science & Engineering,5,9.12,Dr. K. Raman,CSE2001,48.0,47.5,19.5,29.0,18.5,96.0,22.0,0
+23BCE1003,Rohan Verma,rohan.verma2023@vitstudent.ac.in,Computer Science & Engineering,5,6.40,Dr. M. Sundar,CSE2001,21.0,19.5,11.0,16.5,10.0,62.0,5.5,2
+23BCE1004,Ananya Iyer,ananya.iyer2023@vitstudent.ac.in,Information Technology,5,8.20,Dr. S. Mukherjee,CSE2001,39.0,38.5,16.0,25.0,15.5,88.0,14.0,0
+23BCE1005,Vikram Malhotra,vikram.malhotra2023@vitstudent.ac.in,Computer Science & Engineering,5,5.75,Dr. M. Sundar,CSE2001,16.5,14.0,9.0,13.0,7.5,54.0,4.0,3
+23BCE1006,Sneha Reddy,sneha.reddy2023@vitstudent.ac.in,Computer Science & Engineering,5,7.95,Dr. K. Raman,CSE2001,36.0,37.0,15.0,24.0,14.0,82.5,12.0,0
+23BCE1007,Kabir Mehta,kabir.mehta2023@vitstudent.ac.in,Information Technology,5,6.80,Dr. S. Mukherjee,CSE2001,27.5,26.0,13.0,19.0,11.5,72.0,8.0,1
+23BCE1008,Pooja Nair,pooja.nair2023@vitstudent.ac.in,Computer Science & Engineering,5,8.60,Dr. K. Raman,CSE2001,42.0,43.5,17.5,27.0,17.0,91.0,16.5,0
+23BCE1009,Aditya Deshmukh,aditya.deshmukh2023@vitstudent.ac.in,Computer Science & Engineering,5,5.20,Dr. M. Sundar,CSE2001,14.0,12.5,8.0,11.5,6.0,48.5,3.5,4
+23BCE1010,Meera Joshi,meera.joshi2023@vitstudent.ac.in,Information Technology,5,7.45,Dr. S. Mukherjee,CSE2001,31.0,33.0,14.5,21.5,13.0,79.0,10.5,0
+23BCE1011,Karthik Subramanian,karthik.sub@vitstudent.ac.in,Computer Science & Engineering,5,8.40,Dr. K. Raman,CSE2001,41.0,40.0,17.0,26.0,16.5,89.5,15.0,0
+23BCE1012,Riya Sen,riya.sen2023@vitstudent.ac.in,Computer Science & Engineering,5,6.15,Dr. M. Sundar,CSE2001,23.0,21.0,10.5,17.0,9.0,66.0,6.0,2
+23BCE1013,Arjun Kapoor,arjun.kapoor2023@vitstudent.ac.in,Information Technology,5,7.70,Dr. S. Mukherjee,CSE2001,34.0,35.5,15.5,23.0,13.5,81.0,11.0,0
+23BCE1014,Ishita Bansal,ishita.bansal2023@vitstudent.ac.in,Computer Science & Engineering,5,9.45,Dr. K. Raman,CSE2001,49.0,48.5,20.0,30.0,19.5,98.0,24.0,0
+23BCE1015,Devendra Yadav,devendra.yadav2023@vitstudent.ac.in,Computer Science & Engineering,5,5.90,Dr. M. Sundar,CSE2001,18.0,16.0,9.5,14.0,8.0,58.0,5.0,2
+23BCE1016,Tanvi Gupta,tanvi.gupta2023@vitstudent.ac.in,Information Technology,5,8.10,Dr. S. Mukherjee,CSE2001,38.5,39.0,16.5,25.5,15.0,86.5,13.5,0
+23BCE1017,Varun Nambiar,varun.nambiar2023@vitstudent.ac.in,Computer Science & Engineering,5,7.10,Dr. K. Raman,CSE2001,29.0,28.5,13.5,20.0,12.0,74.5,9.0,1
+23BCE1018,Kavya Kulkarni,kavya.kulkarni2023@vitstudent.ac.in,Computer Science & Engineering,5,8.90,Dr. K. Raman,CSE2001,45.0,44.0,18.0,28.5,18.0,93.0,19.0,0
+23BCE1019,Nikhil Choudhary,nikhil.c2023@vitstudent.ac.in,Information Technology,5,6.55,Dr. S. Mukherjee,CSE2001,25.0,23.5,12.0,18.0,10.5,68.5,7.0,1
+23BCE1020,Siddharth Rao,siddharth.rao2023@vitstudent.ac.in,Computer Science & Engineering,5,7.30,Dr. K. Raman,CSE2001,32.5,30.0,14.0,22.0,12.5,77.0,9.5,0
