@@ -1,9 +1,12 @@
 # Problem Statement & Project Scope: EduTrack
 
 > **VITyarthi Flipped Course Evaluated Project Submission**  
+> **Student Name**: SANDEEP KUMAR GUPTA  
+> **Registration Number**: 25BAI10622  
 > **Course**: Object Oriented Programming using Java (CSE1007) / Software Engineering (CSE2001)  
 > **Platform**: 100% Pure Java SE Command-Line Interface (CLI) System  
 > **Repository**: `https://github.com/sandeepkumargupta1/edutrack-academic-analytics`
+
 
 ---
 

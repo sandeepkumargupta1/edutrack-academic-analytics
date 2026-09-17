@@ -21,10 +21,11 @@ COURSE DETAILS:
    Platform:     VITyarthi Online Learning & Evaluation Portal
 
 SUBMITTED BY:
-   Student Name:         [Student Name]
-   Registration Number:  [2XBCEXXXX]
+   Student Name:         SANDEEP KUMAR GUPTA
+   Registration Number:  25BAI10622
    Branch / Program:     B.Tech Computer Science and Engineering
    Semester / Year:      Fall Semester 2026
+
 
 FACULTY GUIDE / EVALUATOR:
    Faculty Name:         [Faculty Guide Name]

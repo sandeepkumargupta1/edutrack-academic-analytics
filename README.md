@@ -1,10 +1,13 @@
 # EduTrack: Academic Performance Analytics & Student Intervention Platform
 
 > **VITyarthi Flipped Course Evaluated Project Submission**  
+> **Student Name**: SANDEEP KUMAR GUPTA  
+> **Registration Number**: 25BAI10622  
 > **Course Title**: Object Oriented Programming using Java / Software Engineering  
 > **Course Code**: CSE1007 / CSE2001  
 > **Execution Mode**: 100% Pure Java SE Command-Line Interface (CLI)  
 > **Repository Root URL**: `https://github.com/sandeepkumargupta1/edutrack-academic-analytics`
+
 
 ---
 

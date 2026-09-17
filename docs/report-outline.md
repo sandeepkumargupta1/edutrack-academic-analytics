@@ -9,10 +9,13 @@
 - **Institution**: Vellore Institute of Technology (VIT), VITyarthi Flipped Learning Portal
 - **Project Title**: EduTrack: Academic Performance Analytics & Student Intervention Platform
 - **Course**: Object Oriented Programming using Java (CSE1007) / Software Engineering (CSE2001)
-- **Student Name**: [Student Name]
-- **Registration Number**: [2XBCEXXXX]
+- **Student Name**: SANDEEP KUMAR GUPTA
+- **Registration Number**: 25BAI10622
 - **Faculty Guide**: [Faculty Guide Name]
 - **Date**: Fall Semester 2026
+
+
+
 
 ---
 
